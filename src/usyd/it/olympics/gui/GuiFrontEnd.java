@@ -1,4 +1,4 @@
-package usyd.it.peerpark.gui;
+package usyd.it.olympics.gui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
-import usyd.it.peerpark.PeerParkClient;
+import usyd.it.olympics.OlympicsDBClient;
 
 /**
  * Main class for GUI, containing all screens and providing methods
@@ -22,7 +22,7 @@ import usyd.it.peerpark.PeerParkClient;
  */
 public final class GuiFrontEnd {
     /// Parent reference for button ActionListeners
-    private PeerParkClient client;
+    private OlympicsDBClient client;
     
     //
     // Top-level GUI objects
@@ -51,7 +51,7 @@ public final class GuiFrontEnd {
     private final String optLogOut;
     private final BookingHistoryScreen historyScreen;
 
-    public GuiFrontEnd(PeerParkClient root) {
+    public GuiFrontEnd(OlympicsDBClient root) {
         client = root;
         window = new JFrame("Client GUI");
         window.setPreferredSize(new Dimension(800, 400));

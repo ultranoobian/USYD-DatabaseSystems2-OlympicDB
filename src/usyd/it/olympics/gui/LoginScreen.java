@@ -1,4 +1,4 @@
-package usyd.it.peerpark.gui;
+package usyd.it.olympics.gui;
 
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -6,18 +6,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import javax.swing.*;
-import usyd.it.peerpark.PeerParkClient;
+import usyd.it.olympics.OlympicsDBClient;
 
 public class LoginScreen extends GuiScreen {
 
     private final JTextField txtMemberName;
     private final JPasswordField pwdMemberUser;
 
-    public LoginScreen(PeerParkClient r) {
+    public LoginScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new GridLayout(3, 2, 0, 0));
 
-        JLabel lblMemberName = new JLabel("Member Email");
+        JLabel lblMemberName = new JLabel("Member ID");
         panel_.add(lblMemberName);
 
         txtMemberName = new JTextField();

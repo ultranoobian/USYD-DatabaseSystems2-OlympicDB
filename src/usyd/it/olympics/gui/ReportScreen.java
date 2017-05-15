@@ -1,14 +1,14 @@
-package usyd.it.peerpark.gui;
+package usyd.it.olympics.gui;
 
 import java.awt.BorderLayout;
 import javax.swing.JTextPane;
-import usyd.it.peerpark.PeerParkClient;
+import usyd.it.olympics.OlympicsDBClient;
 
 public class ReportScreen extends GuiScreen {
 
     private JTextPane reportPane;
 
-    public ReportScreen(PeerParkClient r) {
+    public ReportScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BorderLayout(0, 0));
         reportPane = new JTextPane();

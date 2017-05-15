@@ -1,4 +1,4 @@
-package usyd.it.peerpark.gui;
+package usyd.it.olympics.gui;
 /**
  * Bay Bookings Screen: Display Bay Booking information
  * Author Bryn Jeffries
@@ -18,15 +18,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import usyd.it.peerpark.PeerParkClient;
-import usyd.it.peerpark.data.BayBookingListLine;
+import usyd.it.olympics.OlympicsDBClient;
+import usyd.it.olympics.data.BayBookingListLine;
 
 public class BookingHistoryScreen extends GuiScreen {
     private final BookingsTabelModel bookingList = new BookingsTabelModel();
     private final JButton btnGetDetails;
     private final ListSelectionModel baySelection;
 
-    public BookingHistoryScreen(PeerParkClient r) {
+    public BookingHistoryScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BoxLayout(panel_, BoxLayout.Y_AXIS));
         JTable bookingsTable = new JTable(bookingList);

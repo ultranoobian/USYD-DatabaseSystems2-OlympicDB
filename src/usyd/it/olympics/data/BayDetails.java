@@ -1,4 +1,4 @@
-package usyd.it.peerpark.data;
+package usyd.it.olympics.data;
 
 /**
  * Details of an individual bay

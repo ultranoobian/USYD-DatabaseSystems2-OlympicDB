@@ -1,22 +1,22 @@
-package usyd.it.peerpark;
+package usyd.it.olympics;
 
-import usyd.it.peerpark.data.BayBookingListLine;
-import usyd.it.peerpark.data.BayListLineDetails;
+import usyd.it.olympics.data.BayBookingListLine;
+import usyd.it.olympics.data.BayListLineDetails;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import javax.swing.SwingUtilities;
-import usyd.it.peerpark.data.BayDetails;
-import usyd.it.peerpark.gui.GuiFrontEnd;
+import usyd.it.olympics.data.BayDetails;
+import usyd.it.olympics.gui.GuiFrontEnd;
 
-public class PeerParkClient {
+public class OlympicsDBClient {
     // All GUI stuff is performed by this object
 
     private final GuiFrontEnd gui;
     // All database operations (logging in, running queries) are performed by this object
     private DatabaseBackend db;
 
-    PeerParkClient() {
+    OlympicsDBClient() {
         // Make sure the DB backend works
         try {
             db = new DatabaseBackend(); // Note, doesn't connect to DB
@@ -26,7 +26,7 @@ public class PeerParkClient {
             System.exit(1);
         }
         gui = new GuiFrontEnd(this);
-        setMessage("Welcome to PeerPark Client.");
+        setMessage("Welcome to Olympics DB Client.");
     }
 
     private void setMessage(String msg) {
@@ -41,11 +41,11 @@ public class PeerParkClient {
         try {
             db.openConnection(memUser, memPass);
             setMessage("Verified login, Fetching member details");
-            String member = db.getMemberDetails();
+            String member = db.memberDetails();
             gui.getMainMenuScreen().showMemberDetails(member);
             gui.showMainMenuScreen();
             setMessage("Login successful.");
-        } catch (PeerParkException e) {
+        } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
             db.closeConnection();
         }
@@ -64,11 +64,11 @@ public class PeerParkClient {
     public void showMemberDetails() {
         setMessage("Fetching member details.");
         try {
-            String member = db.getMemberDetails();
+            String member = db.memberDetails();
             gui.getMainMenuScreen().showMemberDetails(member);
             gui.showMainMenuScreen();
             setMessage("Details fetched.");
-        } catch (PeerParkException e) {
+        } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
         }
     }
@@ -85,7 +85,7 @@ public class PeerParkClient {
 
             @Override
             public void run() {
-                new PeerParkClient();
+                new OlympicsDBClient();
             }
         });
     }
@@ -99,7 +99,7 @@ public class PeerParkClient {
             ArrayList<BayListLineDetails> bays = db.getMatchingBays(address);
             gui.getBayFinderScreen().showBays(bays);
             setMessage("All bays fetched.");
-        } catch (PeerParkException e) {
+        } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
             gui.getBayFinderScreen().showBays(new ArrayList<BayListLineDetails>());
         }
@@ -118,7 +118,7 @@ public class PeerParkClient {
             gui.getBayDetailsScreen().showBayDetails(details);
             gui.showBayDetailsScreen();
             setMessage("Details retrieved");
-        } catch (PeerParkException e) {
+        } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
         }
     }
@@ -131,7 +131,7 @@ public class PeerParkClient {
                 gui.getReportScreen().show(bookingDetails);
                 gui.showReportScreen();
                 setMessage("Submission complete");
-        } catch (PeerParkException e) {
+        } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
         }
     }
@@ -147,7 +147,7 @@ public class PeerParkClient {
                 gui.showBayDetailsScreen();
                 setMessage("Bay details retrieved");
             }
-        } catch (PeerParkException e) {
+        } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
         }    
     }
@@ -155,11 +155,11 @@ public class PeerParkClient {
     public void showHistory() {
         setMessage("Fetching booking history.");
         try {
-            ArrayList<BayBookingListLine> bookings = db.getBookings();
+            ArrayList<BayBookingListLine> bookings = db.allBookings();
             gui.getHistoryScreen().showBookings(bookings);
             gui.showHistoryScreen();
             setMessage("All bookings fetched.");
-        } catch (PeerParkException e) {
+        } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
         }    
     }
@@ -171,7 +171,7 @@ public class PeerParkClient {
             gui.getBookingsCreationScreen().startBooking(bayId, cars);
             gui.showBookingsCreationScreen();
             setMessage("Details fetched.");
-        } catch (PeerParkException e) {
+        } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
         } 
     }
@@ -183,7 +183,7 @@ public class PeerParkClient {
             gui.getReportScreen().show(bookingDetails);
             gui.showReportScreen();
             setMessage("Details fetched.");
-        } catch (PeerParkException e) {
+        } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
         }
     }

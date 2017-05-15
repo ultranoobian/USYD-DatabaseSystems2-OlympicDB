@@ -1,4 +1,4 @@
-package usyd.it.peerpark;
+package usyd.it.olympics;
 
 
 /**
@@ -13,8 +13,8 @@ package usyd.it.peerpark;
  * (userid and password) into main() at the bottom of the file.
  */
 
-import usyd.it.peerpark.data.BayBookingListLine;
-import usyd.it.peerpark.data.BayListLineDetails;
+import usyd.it.olympics.data.BayBookingListLine;
+import usyd.it.olympics.data.BayListLineDetails;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,7 +22,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import usyd.it.peerpark.data.BayDetails;
+import usyd.it.olympics.data.BayDetails;
+import usyd.it.olympics.data.OlympicEvent;
 
 /**
  * Database interfacing backend for client. This class uses JDBC to connect to
@@ -32,73 +33,112 @@ import usyd.it.peerpark.data.BayDetails;
  */
 public class DatabaseBackend {
 
-    /// The name of your own database. 
+    ///////////////////////////////
+    /// DB Credentials
+    ///////////////////////////////
+
+    ///////   INFO2120   //////////
+
+    // Update your details here:
+
+//    private final String dbUser = "y17i2x20_YOURUNIKEY";
+//    private final String dbPass = "";
+//    private final String database = "jdbc:postgresql//soit-db-pro-5.ucc.usyd.edu.au/";
+
+
+    ///////   COMP9120   //////////
+
+    /// The name of your own database.
     // Should be "COMP5138" for COMP9120 student accounts
     // Default for other Oracle databases is "ORCL" if you're running it on your own system. 
     private final String dbname = "COMP5138";
     
     /// The database URL
     // All COMP9120 Oracle databases use the following address
-    // Replace oracle12.it.usyd.edu.au with localhost if you're running your own local database.
-    private final String database = "jdbc:oracle:thin:@oracle12.it.usyd.edu.au:1521:";
-    
+    // Replace soit-db-pro-5.ucc.usyd.edu.au with localhost if you're running your own local database.
+    private final String database = "jdbc:oracle:thin:@soit-db-pro-5.ucc.usyd.edu.au:1521:";
+
     // DB login session details - put your connection details here
     private final String dbUser = "";
     private final String dbPass = "";
-    
+
+
+    ///////////////////////////////
+    /// Class Variables
+    ///////////////////////////////
+
     // This variable is held for use in later queries
-    private String member;
-    
+    private String memberID;
+
     // Instance variable for the JDBC database connection
     private Connection conn;
 
-    //
-    // STUDENT-DEFINED FUNCTIONS
-    //
-    
+    ///////////////////////////////
+    /// Student Defined Functions
+    ///////////////////////////////
+
     /**
-     * Validate member details
+     * Validate memberID details
      * 
      * Implements Core Functionality (a)
      *
-     * @return true if username is for a valid member and password is correct
+     * @return true if username is for a valid memberID and password is correct
      * @throws SQLException
      */
-    private boolean validateUser(char[] password) throws SQLException {
+    private boolean checkLogin(char[] password) throws SQLException {
         boolean valid = false;
 
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
-        // Don't forget you have member variables memberUser available to
+        // Don't forget you have memberID variables memberUser available to
         // use in a query.
-        // Query whether login (memberUser, password) is correct...
-        valid = (member.equals("testuser") && new String(password).equals("testpass"));
+        // Query whether login (memberID, password) is correct...
+        valid = (memberID.equals("testuser") && new String(password).equals("testpass"));
 
         return valid;
     }
 
     /**
-     * Obtain details for the current member
-     * 
-     * 
+     * Obtain details for the current memberID
+     *
+     *
      * @return text to be displayed in the home screen
-     * @throws PeerParkException 
+     * @throws OlympicsDBException
      */
-    public String getMemberDetails() throws PeerParkException {
+    public String memberDetails() throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
         String details = "Hello Mr Joe Bloggs";
-        details = details.concat("\nYour cars are: ");
-        details = details.concat("\nBertha (Toyota Yaris, ABC123)");
-        details = details.concat("\nGeronimo (Hyundai Getz, XYZ789)");
-        details = details.concat("\nYou have made 23 bookings");
+        details = details.concat("\nYou are an: " + "Athlete");
+        details = details.concat("\nYou are from: " + "Australia");
+        details = details.concat("\nYour live at: " + "SIT");
+        details = details.concat("\nYour medal tally is:");
+        details = details.concat("\n\tGold: 5");
+        details = details.concat("\n\tSilver: 4");
+        details = details.concat("\n\tBronze: 1");
+        details = details.concat("\nYou have made 20 bookings");
         return details;
     }
+
+
+    /**
+     * Get the events listed in the olympics
+     * @return List of events
+     * @throws OlympicsDBException
+     */
+    ArrayList<OlympicEvent> allEvents() throws OlympicsDBException {
+        // FIXME: Replace The following with REAL OPERATIONS!
+
+        ArrayList<OlympicEvent> events = new ArrayList<>();
+        events.add(new OlympicEvent("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
+        return events;
+    }
+
 
     /**
      * Get status of user in their current hunt
      * @return Details of hunt
-     * @throws PeerParkException
+     * @throws OlympicsDBException
      */
-    BayDetails getFavouriteBay() throws PeerParkException {
+    BayDetails getFavouriteBay() throws OlympicsDBException {
         
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
         // See the constructor in BayStatus.java
@@ -111,7 +151,7 @@ public class DatabaseBackend {
         return details;
     }
     
-    ArrayList<BayBookingListLine> getBookings() throws PeerParkException {
+    ArrayList<BayBookingListLine> allBookings() throws OlympicsDBException {
         ArrayList<BayBookingListLine> bookings = new ArrayList<BayBookingListLine>();
 
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
@@ -125,9 +165,9 @@ public class DatabaseBackend {
      * Implements Core Functionality (e) 
      * 
      * @return list of bays
-     * @throws PeerParkException
+     * @throws OlympicsDBException
      */
-    public ArrayList<BayListLineDetails> getMatchingBays(String address) throws PeerParkException {
+    public ArrayList<BayListLineDetails> getMatchingBays(String address) throws OlympicsDBException {
         ArrayList<BayListLineDetails> bays = new ArrayList<BayListLineDetails>();
 
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
@@ -144,9 +184,9 @@ public class DatabaseBackend {
      * Get details for a specific bay
      * 
      * @return Various details of hunt - see BayDetails.java
-     * @throws PeerParkException 
+     * @throws OlympicsDBException
      */
-    public BayDetails getBayDetails(int bay) throws PeerParkException {
+    public BayDetails getBayDetails(int bay) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
         // See the constructor in BayDetails.java
         BayDetails details = new BayDetails(42, 
@@ -159,7 +199,7 @@ public class DatabaseBackend {
         return details;
     }
     
-    HashMap<Integer, String> getMemberCars() throws PeerParkException {
+    HashMap<Integer, String> getMemberCars() throws OlympicsDBException {
         HashMap<Integer, String> cars = new HashMap<Integer, String>();
         
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
@@ -170,7 +210,7 @@ public class DatabaseBackend {
         return cars;
     }
 
-    public String makeBooking(int bay, int car, Date bookingStart, Date bookingEnd) throws PeerParkException {
+    public String makeBooking(int bay, int car, Date bookingStart, Date bookingEnd) throws OlympicsDBException {
         String newBooking;
 
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
@@ -185,7 +225,7 @@ public class DatabaseBackend {
         return newBooking;
     }
     
-    public String getBookingDetails(int bookingId) throws PeerParkException {
+    public String getBookingDetails(int bookingId) throws OlympicsDBException {
         String booking;
 
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
@@ -200,13 +240,18 @@ public class DatabaseBackend {
         return booking;
     }
 
-    //
-    // The remaining methods don't need to be touched.
-    //
-    
+
+    /////////////////////////////////////////
+    /// Functions below don't need
+    /// to be touched.
+    ///
+    /// They are for connecting and handling errors!!
+    /////////////////////////////////////////
+
+
     /**
      * Print any log/error message to console Use this for debugging, not for
- messages to the user - throw a PeerParkException instead.
+ messages to the user - throw a OlympicsDBException instead.
      *
      * @param message
      */
@@ -223,7 +268,7 @@ public class DatabaseBackend {
     DatabaseBackend() throws ClassNotFoundException {
         // Load Oracle's JDBC driver
         Class.forName("oracle.jdbc.driver.OracleDriver");
-        member = "";
+        memberID = "";
     }
 
     /**
@@ -233,16 +278,16 @@ public class DatabaseBackend {
      * found.
      * @throws SQLException if a DB connection cannot be established
      */
-    public void openConnection(String usr, char [] pwd) throws PeerParkException {
-        member = usr;
+    public void openConnection(String usr, char [] pwd) throws OlympicsDBException {
+        memberID = usr;
         try {
             connectToDatabase();
-            if (validateUser(pwd)==false) {
-                throw new PeerParkException("User validation failed");
+            if (checkLogin(pwd)==false) {
+                throw new OlympicsDBException("User validation failed");
             }
         } catch (SQLException b) {
             complain("Couldn't connect to the DB");
-            throw new PeerParkException("Couldn't connect to the DB", b);
+            throw new OlympicsDBException("Couldn't connect to the DB", b);
         }
     }
 

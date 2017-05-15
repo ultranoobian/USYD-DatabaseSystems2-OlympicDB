@@ -1,4 +1,4 @@
-package usyd.it.peerpark.gui;
+package usyd.it.olympics.gui;
 
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.SpinnerListModel;
-import usyd.it.peerpark.PeerParkClient;
+import usyd.it.olympics.OlympicsDBClient;
 
 public class BookingsCreationScreen extends GuiScreen {
     private Integer bayId;
@@ -24,7 +24,7 @@ public class BookingsCreationScreen extends GuiScreen {
     private final SpinnerListModel carNameModel;
     private HashMap<Integer, String> carList;
 
-    public BookingsCreationScreen(PeerParkClient r) {
+    public BookingsCreationScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new GridLayout(0, 2, 0, 0));
 

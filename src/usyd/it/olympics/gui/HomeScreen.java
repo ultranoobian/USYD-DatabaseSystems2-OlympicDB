@@ -1,8 +1,8 @@
-package usyd.it.peerpark.gui;
+package usyd.it.olympics.gui;
 
 import java.awt.BorderLayout;
 import javax.swing.JTextArea;
-import usyd.it.peerpark.PeerParkClient;
+import usyd.it.olympics.OlympicsDBClient;
 
 /**
  * Very simple home screen: Nothing fancy, just prints player details in a text area.
@@ -12,7 +12,7 @@ public class HomeScreen extends GuiScreen {
 
     private final JTextArea description;
 
-    public HomeScreen(PeerParkClient r) {
+    public HomeScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BorderLayout(0, 0));
 

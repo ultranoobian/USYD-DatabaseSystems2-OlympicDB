@@ -1,4 +1,4 @@
-package usyd.it.peerpark.data;
+package usyd.it.olympics.data;
 
 /**
  * Class to hold details for a bay as used by BayFinderScreen

@@ -1,4 +1,4 @@
-package usyd.it.peerpark.gui;
+package usyd.it.olympics.gui;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -9,15 +9,15 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import usyd.it.peerpark.PeerParkClient;
-import usyd.it.peerpark.data.BayListLineDetails;
+import usyd.it.olympics.OlympicsDBClient;
+import usyd.it.olympics.data.BayListLineDetails;
 
 public class BayFinderScreen extends GuiScreen {
     private final BayListTabelModel bayList = new BayListTabelModel();
     private final ListSelectionModel baySelection;
     private final JTextField txtAddress;
 
-    public BayFinderScreen(PeerParkClient r) {
+    public BayFinderScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BoxLayout(panel_, BoxLayout.Y_AXIS));
 

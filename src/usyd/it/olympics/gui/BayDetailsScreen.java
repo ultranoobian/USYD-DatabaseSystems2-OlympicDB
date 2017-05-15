@@ -1,12 +1,12 @@
-package usyd.it.peerpark.gui;
+package usyd.it.olympics.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
-import usyd.it.peerpark.PeerParkClient;
-import usyd.it.peerpark.data.BayDetails;
+import usyd.it.olympics.OlympicsDBClient;
+import usyd.it.olympics.data.BayDetails;
 
 /**
  * Very simple bay details screen, cloned from HomeScreen
@@ -17,7 +17,7 @@ public class BayDetailsScreen extends GuiScreen {
     private final JTextArea description;
     private final JButton btnMakeBooking;
     private Integer bayId;
-    public BayDetailsScreen(PeerParkClient r) {
+    public BayDetailsScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BoxLayout(panel_, BoxLayout.Y_AXIS));
 

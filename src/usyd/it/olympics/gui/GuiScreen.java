@@ -1,7 +1,7 @@
-package usyd.it.peerpark.gui;
+package usyd.it.olympics.gui;
 
 import javax.swing.JPanel;
-import usyd.it.peerpark.PeerParkClient;
+import usyd.it.olympics.OlympicsDBClient;
 
 /**
  *
@@ -10,7 +10,7 @@ import usyd.it.peerpark.PeerParkClient;
 class GuiScreen {
 
     protected final JPanel panel_;
-    protected final PeerParkClient client_;
+    protected final OlympicsDBClient client_;
 
     /**
      * @return the panel_
@@ -19,7 +19,7 @@ class GuiScreen {
         return panel_;
     }
     
-    protected GuiScreen(PeerParkClient r) {
+    protected GuiScreen(OlympicsDBClient r) {
         panel_ = new JPanel();
         client_ = r;
     }
