@@ -101,35 +101,35 @@ public class OlympicsDBClient {
     //
     // Bay Finder
     //
-//    public void showMatchingBays(String address) {
-//        setMessage("Fetching bay availabilities.");
-//        try {
-//            ArrayList<HashMap<String, Object>> bays = db.getMatchingBays(address);
-//            gui.getBayFinderScreen().showBays(bays);
-//            setMessage("All bays fetched.");
-//        } catch (OlympicsDBException e) {
-//            setMessage(e.getMessage());
-//            gui.getBayFinderScreen().showBays(new ArrayList<BayListLineDetails>());
-//        }
-//        gui.showBayFinderScreen();
-//    }
-//    
-//    public void showBayAvailability() {
-////        setMessage("Fetching bay availabilities.");
-//        gui.showBayFinderScreen();
-//    }
+    public void showMatchingBays(String address) {
+        setMessage("Fetching bay availabilities.");
+        try {
+            ArrayList<HashMap<String, Object>> bays = db.getMatchingBays(address);
+            gui.getBayFinderScreen().showBays(bays);
+            setMessage("All bays fetched.");
+        } catch (OlympicsDBException e) {
+            setMessage(e.getMessage());
+            gui.getBayFinderScreen().showBays(new ArrayList<HashMap<String, Object>>());
+        }
+        gui.showBayFinderScreen();
+    }
     
-//    public void getBayDetails(int bay) {
-//        setMessage("Retrieving details");
-//        try {
-//            BayDetails details = db.getBayDetails(bay);
-//            gui.getBayDetailsScreen().showBayDetails(details);
-//            gui.showBayDetailsScreen();
-//            setMessage("Details retrieved");
-//        } catch (OlympicsDBException e) {
-//            setMessage(e.getMessage());
-//        }
-//    }
+    public void showBayAvailability() {
+        setMessage("Fetching bay availabilities.");
+        gui.showBayFinderScreen();
+    }
+    
+    public void getBayDetails(int bay) {
+        setMessage("Retrieving details");
+        try {
+        	HashMap<String, Object> details = db.getBayDetails(bay);
+            gui.getBayDetailsScreen().showBayDetails(details);
+            gui.showBayDetailsScreen();
+            setMessage("Details retrieved");
+        } catch (OlympicsDBException e) {
+            setMessage(e.getMessage());
+        }
+    }
 
     public void makeBooking(int bay, int car, Date bookingStart, Date bookingEnd) {
         setMessage("Submitting booking");

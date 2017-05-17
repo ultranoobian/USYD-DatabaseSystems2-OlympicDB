@@ -41,25 +41,23 @@ public class BayDetailsScreen extends GuiScreen {
     }
 
     public void showBayDetails(HashMap<String, Object> bay) {
-        bayId = bay.getBayId();
+        bayId = (Integer) bay.get(BayDetails.BAYID);
         btnMakeBooking.setEnabled(true);
-        String s = "Name: " + bay.getSite()
-                + "\nAddress: " + bay.getHouseNum() + " " + bay.getStreet()
-                + ", " + bay.getCity()
-                + "\nGPS co-ords: (" + bay.getGpsLong() + "," + bay.getGpsLat() + ")"
-                + "\nWeekday availability: " + bay.getWkAvailStart() + ":00 to " + bay.getWkAvailEnd() + ":00"
-                + "\nWeekend availability: " + bay.getWeAvailStart() + ":00 to " + bay.getWeAvailEnd() + ":00";
+        String s = "Name: " + bay.get(BayDetails.SITE)
+                + "\nAddress: " + bay.get(BayDetails.HOUSENUM) + " " + bay.get(BayDetails.STREET)
+                + ", " + bay.get(BayDetails.CITY)
+                + "\nGPS co-ords: (" + bay.get(BayDetails.GPSLONG) + "," + bay.get(BayDetails.GPSLAT) + ")";
 
-        int[] hours = bay.getTodayHours();
-        if (hours.length<1) {
-            s = s.concat("\nThere is no availability today");
-        } else {
-            String hrsText = "\nBay is available at the following hours";
-            for(int hour : hours) {
-                hrsText = hrsText.concat("\n" + hour + ":00");
-            }
-            s= s.concat(hrsText);
-        }
+//        int[] hours = (int[]) bay.get(BayDetails.TODAYHOURS);
+//        if (hours.length<1) {
+//            s = s.concat("\nThere is no availability today");
+//        } else {
+//            String hrsText = "\nBay is available at the following hours";
+//            for(int hour : hours) {
+//                hrsText = hrsText.concat("\n" + hour + ":00");
+//            }
+//            s= s.concat(hrsText);
+//        }
         description.setText(s);
     }
 }

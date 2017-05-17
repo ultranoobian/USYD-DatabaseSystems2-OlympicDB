@@ -1,6 +1,6 @@
 package usyd.it.olympics.gui;
 /**
- * Bay Bookings Screen: Display Bay Booking information
+ * Bookings Screen: Display Booking information
  * Author Bryn Jeffries
  */
 import java.awt.event.ActionEvent;
@@ -20,7 +20,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import usyd.it.olympics.OlympicsDBClient;
-import usyd.it.olympics.data.BayBookingListLine;
+import usyd.it.olympics.data.BookingTuple;
 
 public class BookingHistoryScreen extends GuiScreen {
     private final BookingsTabelModel bookingList = new BookingsTabelModel();
@@ -64,7 +64,7 @@ public class BookingHistoryScreen extends GuiScreen {
 
     public void showBookings(ArrayList<HashMap<String, Object>> bookings) {
             if(bookings == null) { // Prevent nullpointer exceptions
-                    bookingList.update(new ArrayList<BayBookingListLine>());
+                    bookingList.update(new ArrayList<HashMap<String, Object>>());
                     btnGetDetails.setEnabled(false);
             } else {
                     bookingList.update(bookings);
@@ -87,30 +87,32 @@ public class BookingHistoryScreen extends GuiScreen {
     
     @SuppressWarnings("serial")
     class BookingsTabelModel extends AbstractTableModel {
-            private ArrayList<BayBookingListLine> bookings;
+            private ArrayList<HashMap<String, Object>> bookings;
 
-            private final String [] columnNames = { "Car", "Parking Bay", "From", "Till"};
-            private final Class<?>[] columnClasses = { String.class, String.class, Date.class, Date.class};
+            private final String idName = BookingTuple.idName;
+            private final String [] columnNames = BookingTuple.columnNames;
+            private final Class<?>[] columnClasses = BookingTuple.columnClasses;
 
         public Class<?> getColumnClass(int columnIndex) {
                     return columnClasses[columnIndex];
             }
 
         public BookingsTabelModel() {
-            bookings = new ArrayList<BayBookingListLine>();
+            bookings = new ArrayList<HashMap<String, Object>>();
             }
 
             /**
                 * Update the table with newly supplied data
                 * @param newCars New list of cars
                 */
-            public void update(ArrayList<BayBookingListLine> newBookings) {
+            public void update(ArrayList<HashMap<String, Object>> newBookings) {
                     bookings = newBookings;
                     super.fireTableDataChanged();
             }
             
-            public int getBookingId(int row) {
-                return bookings.get(row).getBookingId();
+            public Integer getBookingId(int row) {
+                HashMap<String, Object> booking = bookings.get(row);
+				return booking==null ? null : (Integer) booking.get(idName);
             }
 
             /*
@@ -134,21 +136,8 @@ public class BookingHistoryScreen extends GuiScreen {
             @Override
             public Object getValueAt(int row, int col) {
                 Object o=null;
-                BayBookingListLine booking = bookings.get(row);
-                switch(col) {
-                    case 0:
-                        o = booking.getCarName();
-                        break;
-                    case 1:
-                        o = booking.getBayLocation();
-                        break;
-                    case 2:
-                        o = booking.getStartTime();
-                        break;
-                    case 3:
-                        o = booking.getEndTime();
-                        break;
-                }
+                HashMap<String, Object> booking = bookings.get(row);
+                o = booking!=null && col>=0 && col<columnNames.length ? booking.get(columnNames[col]) : null;
                 return o;
             }
 
