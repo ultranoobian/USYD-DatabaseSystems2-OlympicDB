@@ -3,7 +3,7 @@ package usyd.it.olympics.data;
 import java.util.HashMap;
 
 /**
- * Created by natc on 18/05/17.
+ * Created by INFO2120
  */
 public interface BasicEntity {
 
