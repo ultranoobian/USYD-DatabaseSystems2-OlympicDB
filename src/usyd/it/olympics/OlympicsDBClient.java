@@ -2,6 +2,8 @@ package usyd.it.olympics;
 
 import usyd.it.olympics.data.BayBookingListLine;
 import usyd.it.olympics.data.BayListLineDetails;
+
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,12 +17,13 @@ public class OlympicsDBClient {
     private final GuiFrontEnd gui;
     // All database operations (logging in, running queries) are performed by this object
     private DatabaseBackend db;
+	private String memberID; // Member ID
 
-    OlympicsDBClient() {
+    OlympicsDBClient(String config) {
         // Make sure the DB backend works
         try {
-            db = new DatabaseBackend(); // Note, doesn't connect to DB
-        } catch (ClassNotFoundException e) {
+            db = new DatabaseBackend(new FileInputStream(config)); // Note, doesn't connect to DB
+        } catch (Exception e) {
             // Can't do much so die noisily.
             e.printStackTrace();
             System.exit(1);
@@ -39,21 +42,25 @@ public class OlympicsDBClient {
     public void login(String memUser, char [] memPass) {
         setMessage("Connecting to DB.");
         try {
-            db.openConnection(memUser, memPass);
-            setMessage("Verified login, Fetching member details");
-            String member = db.memberDetails();
-            gui.getMainMenuScreen().showMemberDetails(member);
-            gui.showMainMenuScreen();
-            setMessage("Login successful.");
+        	memberID = null;
+            if(db.checkLogin(memUser, memPass)) {
+            	memberID = memUser;
+            	setMessage("Verified login, Fetching member details");
+            	String member = db.memberDetails(memberID);
+            	gui.getMainMenuScreen().showMemberDetails(member);
+            	gui.showMainMenuScreen();
+            	setMessage("Login successful.");
+            } else {
+            	setMessage("Login details incorrect.");
+            }
         } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
-            db.closeConnection();
         }
     }
 
     public void logout() {
         setMessage("Logging out");
-        db.closeConnection();
+        memberID = null;
         gui.showLoginScreen();
         setMessage("Logged out");
     }
@@ -64,7 +71,7 @@ public class OlympicsDBClient {
     public void showMemberDetails() {
         setMessage("Fetching member details.");
         try {
-            String member = db.memberDetails();
+            String member = db.memberDetails(memberID);
             gui.getMainMenuScreen().showMemberDetails(member);
             gui.showMainMenuScreen();
             setMessage("Details fetched.");
@@ -85,7 +92,7 @@ public class OlympicsDBClient {
 
             @Override
             public void run() {
-                new OlympicsDBClient();
+                new OlympicsDBClient("olympicsdb.properties");
             }
         });
     }

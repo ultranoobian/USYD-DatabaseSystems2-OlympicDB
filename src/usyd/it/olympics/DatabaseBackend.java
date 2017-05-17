@@ -15,6 +15,9 @@ package usyd.it.olympics;
 
 import usyd.it.olympics.data.BayBookingListLine;
 import usyd.it.olympics.data.BayListLineDetails;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,6 +25,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Properties;
+
 import usyd.it.olympics.data.BayDetails;
 import usyd.it.olympics.data.OlympicEvent;
 
@@ -34,44 +39,12 @@ import usyd.it.olympics.data.OlympicEvent;
 public class DatabaseBackend {
 
     ///////////////////////////////
-    /// DB Credentials
+    /// DB Connection details
     ///////////////////////////////
+    private final String dbUser;
+    private final String dbPass;
+	private final String connstring;
 
-    ///////   INFO2120   //////////
-
-    // Update your details here:
-
-//    private final String dbUser = "y17i2x20_YOURUNIKEY";
-//    private final String dbPass = "";
-//    private final String database = "jdbc:postgresql//soit-db-pro-5.ucc.usyd.edu.au/";
-
-
-    ///////   COMP9120   //////////
-
-    /// The name of your own database.
-    // Should be "COMP5138" for COMP9120 student accounts
-    // Default for other Oracle databases is "ORCL" if you're running it on your own system. 
-    private final String dbname = "COMP5138";
-    
-    /// The database URL
-    // All COMP9120 Oracle databases use the following address
-    // Replace soit-db-pro-5.ucc.usyd.edu.au with localhost if you're running your own local database.
-    private final String database = "jdbc:oracle:thin:@soit-db-pro-5.ucc.usyd.edu.au:1521:";
-
-    // DB login session details - put your connection details here
-    private final String dbUser = "";
-    private final String dbPass = "";
-
-
-    ///////////////////////////////
-    /// Class Variables
-    ///////////////////////////////
-
-    // This variable is held for use in later queries
-    private String memberID;
-
-    // Instance variable for the JDBC database connection
-    private Connection conn;
 
     ///////////////////////////////
     /// Student Defined Functions
@@ -83,28 +56,36 @@ public class DatabaseBackend {
      * Implements Core Functionality (a)
      *
      * @return true if username is for a valid memberID and password is correct
+     * @throws OlympicsDBException 
      * @throws SQLException
      */
-    private boolean checkLogin(char[] password) throws SQLException {
-        boolean valid = false;
+    public boolean checkLogin(String member, char[] password) throws OlympicsDBException  {
+        boolean valid = false; // Assume the worst.
+        try {
+            Connection conn = getConnection();
+        	
+	        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
+	        // Don't forget you have memberID variables memberUser available to
+	        // use in a query.
+	        // Query whether login (memberID, password) is correct...
+	        valid = (member.equals("testuser") && new String(password).equals("testpass"));
 
-        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
-        // Don't forget you have memberID variables memberUser available to
-        // use in a query.
-        // Query whether login (memberID, password) is correct...
-        valid = (memberID.equals("testuser") && new String(password).equals("testpass"));
-
+        } catch (Exception e) {
+            complain("Error checking login details");
+            throw new OlympicsDBException("Error checking login details", e);
+        }
         return valid;
     }
 
     /**
      * Obtain details for the current memberID
+     * @param memberID 
      *
      *
      * @return text to be displayed in the home screen
      * @throws OlympicsDBException
      */
-    public String memberDetails() throws OlympicsDBException {
+    public String memberDetails(String memberID) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
         String details = "Hello Mr Joe Bloggs";
         details = details.concat("\nYou are an: " + "Athlete");
@@ -260,71 +241,72 @@ public class DatabaseBackend {
     }
 
     /**
-     * Default constructor that simply loads the JDBC driver
+     * Default constructor that simply loads the JDBC driver and sets to the
+     * connection details.
      *
      * @throws ClassNotFoundException if the specified JDBC driver can't be
      * found.
+     * @throws OlympicsDBException anything else
      */
-    DatabaseBackend() throws ClassNotFoundException {
-        // Load Oracle's JDBC driver
-        Class.forName("oracle.jdbc.driver.OracleDriver");
-        memberID = "";
+    DatabaseBackend(InputStream config) throws ClassNotFoundException, OlympicsDBException {
+    	Properties props = new Properties();
+    	try {
+			props.load(config);
+		} catch (IOException e) {
+			throw new OlympicsDBException("Couldn't read config data",e);
+		}
+
+    	dbUser = props.getProperty("username");
+    	dbPass = props.getProperty("userpass");
+    	String port = props.getProperty("port");
+    	String dbname = props.getProperty("dbname");
+    	String server = props.getProperty("address");;
+    	
+        // Load JDBC driver and setup connection details
+    	String vendor = props.getProperty("dbvendor");
+		if(vendor==null) {
+    		throw new OlympicsDBException("No vendor config data");
+    	} else if ("postgresql".equals(vendor)) { 
+    		Class.forName("org.postgresql.Driver");
+    		connstring = "jdbc:postgresql://" + server + ":" + port + "/" + dbname;
+    	} else if ("oracle".equals(vendor)) {
+    		Class.forName("oracle.jdbc.driver.OracleDriver");
+    		connstring = "jdbc:oracle:thin:@" + server + ":" + port + ":" + dbname;
+    	} else throw new OlympicsDBException("Unknown database vendor: " + vendor);
+		
+		// test the connection
+		Connection conn = null;
+		try {
+			conn = getConnection();
+		} catch (SQLException e) {
+			throw new OlympicsDBException("Couldn't open connection", e);
+		} finally {
+			reallyClose(conn);
+		}
     }
 
+	/**
+	 * Utility method to ensure a connection is closed without 
+	 * generating any exceptions
+	 * @param conn Database connection
+	 */
+	private void reallyClose(Connection conn) {
+		if(conn!=null)
+			try {
+				conn.close();
+			} catch (SQLException ignored) {}
+	}
+
     /**
-     * Construct object with open connection using supplied login details
-     *
-     * @throws ClassNotFoundException if the specified JDBC driver can't be
-     * found.
+     * Construct object with open connection using configured login details
+     * @return database connection
      * @throws SQLException if a DB connection cannot be established
      */
-    public void openConnection(String usr, char [] pwd) throws OlympicsDBException {
-        memberID = usr;
-        try {
-            connectToDatabase();
-            if (checkLogin(pwd)==false) {
-                throw new OlympicsDBException("User validation failed");
-            }
-        } catch (SQLException b) {
-            complain("Couldn't connect to the DB");
-            throw new OlympicsDBException("Couldn't connect to the DB", b);
-        }
+    private Connection getConnection() throws SQLException {
+        Connection conn;
+        conn = DriverManager.getConnection(connstring, dbUser, dbPass);
+        return conn;
     }
 
-    /**
-     * Establishes a connection to the database. The connection parameters are
-     * read from the instance variables above
-     */
-    private void connectToDatabase() throws SQLException {
-        if(dbUser =="" || dbPass == "") {
-            complain("Empty DB login details, so just pretending to connect.");
-        } else {
-            conn = DriverManager.getConnection(database + dbname, dbUser, dbPass);
-        }
-    }
-
-    /**
-     * Close the database connection again
-     */
-    public void closeConnection() {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException ignored) {
-                complain("Couldn't close connection, ignoring");
-            } finally {
-                conn = null;
-            }
-        }
-    }
-
-    @Override
-    protected void finalize() {
-        try {
-            super.finalize();
-        } catch (Throwable ignored) {
-        }
-        closeConnection();
-    }
-
+    
 }
