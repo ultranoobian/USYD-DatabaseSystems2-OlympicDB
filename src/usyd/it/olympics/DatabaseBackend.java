@@ -13,22 +13,18 @@ package usyd.it.olympics;
  * (userid and password) into main() at the bottom of the file.
  */
 
-import usyd.it.olympics.data.BayBookingListLine;
-import usyd.it.olympics.data.BayListLineDetails;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 
-import usyd.it.olympics.data.BayDetails;
-import usyd.it.olympics.data.OlympicEvent;
+import usyd.it.olympics.data.OlympicEntity;
+import usyd.it.olympics.data.OlympicJourney;
 
 /**
  * Database interfacing backend for client. This class uses JDBC to connect to
@@ -49,6 +45,8 @@ public class DatabaseBackend {
     ///////////////////////////////
     /// Student Defined Functions
     ///////////////////////////////
+
+    /////  Login and Member  //////
 
     /**
      * Validate memberID details
@@ -104,6 +102,8 @@ public class DatabaseBackend {
     }
 
 
+    //////////  Events  //////////
+
     /**
      * Get the events listed in the olympics
      * @return List of events
@@ -113,8 +113,85 @@ public class DatabaseBackend {
         // FIXME: Replace The following with REAL OPERATIONS!
 
         ArrayList<HashMap<String,Object>> events = new ArrayList<HashMap<String,Object>>();
-//        events.add(new OlympicEvent("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
+//        events.add(new OlympicEntity("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
         return events;
+    }
+
+    /**
+     * Get all of the events listed in the olympics for a given sport
+     *
+     * @param sportname the name of the sport we are filtering by
+     * @return List of the events for that sport
+     * @throws OlympicsDBException
+     */
+    ArrayList<HashMap<String, Object>> allEventsSport(String sportname) throws OlympicsDBException {
+        // FIXME: Replace the following with REAL OPERATIONS!
+
+        ArrayList<HashMap<String, Object>> events = new ArrayList<>();
+//        events.add(new OlympicEntity("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
+        return events;
+    }
+
+    /**
+     * Get the events listed in the olympics that a member has participated in
+     * @param memberID the ID of the member
+     * @return A list of all the sports the member has participated in
+     * @throws OlympicsDBException
+     */
+    ArrayList<HashMap<String, Object>> getEventsForMember(String memberID) throws OlympicsDBException{
+         // FIXME: Replace the following with REAL OPERATIONS!
+
+        ArrayList<HashMap<String, Object>> events = new ArrayList<>();
+//        events.add(new OlympicEntity("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
+        return events;
+    }
+
+    /**
+     * The details of a single event
+     * @param eventName the event name
+     * @return a hashmap of all the attributes of the event.
+     * @throws OlympicsDBException
+     */
+    HashMap<String, Object> eventDetails(String eventName) throws OlympicsDBException {
+        // FIXME: Replace the following with REAL OPERATIONS!
+
+        OlympicEntity event = new OlympicEntity("200MFreestyle", new Date(), "Points", "Swimming", "SIT");
+
+        return event.asHashMap();
+    }
+
+
+    ///////   Journeys    ////////
+
+    /**
+     * Array list of journeys from one place to another
+     * @param fromPlace the origin, starting place.
+     * @param toPlace the destination, place to go to.
+     * @return a list of all journeys from the origin to destination
+     */
+    ArrayList<HashMap<String, Object>> allJourneys(String fromPlace, String toPlace){
+        // FIXME: Replace the following with REAL OPERATIONS!
+        ArrayList<HashMap<String, Object>> journeys = new ArrayList<>();
+
+        journeys.add(new OlympicJourney("TR870R", new Date(), "SIT", "Wentworth", 4, 7).asHashMap());
+
+        return journeys;
+    }
+
+    /**
+     * Array list of journeys from one place to another on a given date
+     * @param journeyDate the date of the journey
+     * @param fromPlace the origin, starting place.
+     * @param toPlace the destination, place to go to.
+     * @return a list of all journeys from the origin to destination
+     */
+    ArrayList<HashMap<String, Object>> getDayJourneys(String fromPlace, String toPlace, Date journeyDate){
+        // FIXME: Replace the following with REAL OPERATIONS!
+        ArrayList<HashMap<String, Object>> journeys = new ArrayList<>();
+
+        journeys.add(new OlympicJourney("TR870R", journeyDate, "SIT", "Wentworth", 4, 7).asHashMap());
+
+        return journeys;
     }
 
 
