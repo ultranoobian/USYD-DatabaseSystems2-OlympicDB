@@ -59,8 +59,8 @@ public class DatabaseBackend {
      * @throws OlympicsDBException 
      * @throws SQLException
      */
-    public boolean checkLogin(String member, char[] password) throws OlympicsDBException  {
-        boolean valid = false; // Assume the worst.
+    public HashMap<String,Object> checkLogin(String member, char[] password) throws OlympicsDBException  {
+        HashMap<String,Object> details = null;
         try {
             Connection conn = getConnection();
         	
@@ -68,34 +68,38 @@ public class DatabaseBackend {
 	        // Don't forget you have memberID variables memberUser available to
 	        // use in a query.
 	        // Query whether login (memberID, password) is correct...
-	        valid = (member.equals("testuser") && new String(password).equals("testpass"));
+            boolean valid = (member.equals("testuser") && new String(password).equals("testpass"));
+            if (valid) {
+            	details = new HashMap<String,Object>();
 
+    	        // Populate with record data
+            	details.put("member_id", member);
+            	details.put("title", "Mr");
+            	details.put("first_name", "Potato");
+            	details.put("family_name", "Head");
+            	details.put("country_name", "Australia");
+            	details.put("residence", "SIT");
+            	details.put("member_type", "athlete");
+            }
         } catch (Exception e) {
-            complain("Error checking login details");
             throw new OlympicsDBException("Error checking login details", e);
         }
-        return valid;
+        return details;
     }
 
     /**
      * Obtain details for the current memberID
      * @param memberID 
+     * @param member_type 
      *
      *
      * @return text to be displayed in the home screen
      * @throws OlympicsDBException
      */
-    public String memberDetails(String memberID) throws OlympicsDBException {
+    public HashMap<String, Object> memberDetails(String memberID, String member_type) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
-        String details = "Hello Mr Joe Bloggs";
-        details = details.concat("\nYou are an: " + "Athlete");
-        details = details.concat("\nYou are from: " + "Australia");
-        details = details.concat("\nYour live at: " + "SIT");
-        details = details.concat("\nYour medal tally is:");
-        details = details.concat("\n\tGold: 5");
-        details = details.concat("\n\tSilver: 4");
-        details = details.concat("\n\tBronze: 1");
-        details = details.concat("\nYou have made 20 bookings");
+    	HashMap<String, Object> details = new HashMap<String, Object>();
+    	//details.put(arg0, arg1)= "Hello Mr Joe Bloggs";
         return details;
     }
 
@@ -105,11 +109,11 @@ public class DatabaseBackend {
      * @return List of events
      * @throws OlympicsDBException
      */
-    ArrayList<OlympicEvent> allEvents() throws OlympicsDBException {
+    ArrayList<HashMap<String,Object>> allEvents() throws OlympicsDBException {
         // FIXME: Replace The following with REAL OPERATIONS!
 
-        ArrayList<OlympicEvent> events = new ArrayList<>();
-        events.add(new OlympicEvent("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
+        ArrayList<HashMap<String,Object>> events = new ArrayList<HashMap<String,Object>>();
+//        events.add(new OlympicEvent("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
         return events;
     }
 
@@ -119,24 +123,25 @@ public class DatabaseBackend {
      * @return Details of hunt
      * @throws OlympicsDBException
      */
-    BayDetails getFavouriteBay() throws OlympicsDBException {
+    HashMap<String,Object> getFavouriteBay() throws OlympicsDBException {
         
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
         // See the constructor in BayStatus.java
-        BayDetails details =  new BayDetails(92, "Left of driveway", 
-                "62" , "Bourne Drive, Ludlum", "Scarlatti",
-                12543.233, 12787.34665, 
-                3, 4, 6,
-                9, 5, 10, 4, 
-                new int[]{10, 11, 2, 3});
+    	HashMap<String,Object> details =  new HashMap<String,Object>();
+//        		(92, "Left of driveway", 
+//                "62" , "Bourne Drive, Ludlum", "Scarlatti",
+//                12543.233, 12787.34665, 
+//                3, 4, 6,
+//                9, 5, 10, 4, 
+//                new int[]{10, 11, 2, 3});
         return details;
     }
     
-    ArrayList<BayBookingListLine> allBookings() throws OlympicsDBException {
-        ArrayList<BayBookingListLine> bookings = new ArrayList<BayBookingListLine>();
+    ArrayList<HashMap<String,Object>> allBookings() throws OlympicsDBException {
+        ArrayList<HashMap<String,Object>> bookings = new ArrayList<HashMap<String,Object>>();
 
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
-        bookings.add(new BayBookingListLine(73, "Mike the Speedy Potato", "Bay 5, 7A Ocean View, ", new Timestamp(111,03,11,13,00, 0, 0), new Timestamp(111,03,11,23,99, 0, 0)));
+        //bookings.add(new BayBookingListLine(73, "Mike the Speedy Potato", "Bay 5, 7A Ocean View, ", new Timestamp(111,03,11,13,00, 0, 0), new Timestamp(111,03,11,23,99, 0, 0)));
         return bookings;
     }
                 
@@ -148,15 +153,15 @@ public class DatabaseBackend {
      * @return list of bays
      * @throws OlympicsDBException
      */
-    public ArrayList<BayListLineDetails> getMatchingBays(String address) throws OlympicsDBException {
-        ArrayList<BayListLineDetails> bays = new ArrayList<BayListLineDetails>();
+    public ArrayList<HashMap<String,Object>> getMatchingBays(String address) throws OlympicsDBException {
+        ArrayList<HashMap<String,Object>> bays = new ArrayList<HashMap<String,Object>>();
 
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
         // BayListLineDetails is a simple container class to hold the required attributes of an individual hunt
         // create one as "new BayListLineDetails(name, start, capacity, available)"
-        bays.add(new BayListLineDetails(42, "Lot 3", "7", "Acacia Crescent, Foggy Bottom", "Newcastle"));
-        bays.add(new BayListLineDetails(12, "Space 43", "14B", "Threepwood Avenue, Guybrushbury", "Monkey Island"));
-        bays.add(new BayListLineDetails(98, "Only bay", "11/12", "LeChuck Heights, Melee Heights", "Monkey Island"));
+//        bays.add(new BayListLineDetails(42, "Lot 3", "7", "Acacia Crescent, Foggy Bottom", "Newcastle"));
+//        bays.add(new BayListLineDetails(12, "Space 43", "14B", "Threepwood Avenue, Guybrushbury", "Monkey Island"));
+//        bays.add(new BayListLineDetails(98, "Only bay", "11/12", "LeChuck Heights, Melee Heights", "Monkey Island"));
 
         return bays;
     }
@@ -167,16 +172,17 @@ public class DatabaseBackend {
      * @return Various details of hunt - see BayDetails.java
      * @throws OlympicsDBException
      */
-    public BayDetails getBayDetails(int bay) throws OlympicsDBException {
+    public HashMap<String,Object> getBayDetails(int bay) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
         // See the constructor in BayDetails.java
-        BayDetails details = new BayDetails(42, 
-                "Lot 5", 
-                "7", "Acacia Avenue, Foggy Bottom", "Newcastle",
-                123.456, 874.3455,
-                3, 2.5, 5,
-                10, 4, 0, 0,
-                new int[]{});
+    	HashMap<String,Object> details = new HashMap<String,Object>();
+//        (42, 
+//                "Lot 5", 
+//                "7", "Acacia Avenue, Foggy Bottom", "Newcastle",
+//                123.456, 874.3455,
+//                3, 2.5, 5,
+//                10, 4, 0, 0,
+//                new int[]{});
         return details;
     }
     
@@ -228,17 +234,6 @@ public class DatabaseBackend {
     ///
     /// They are for connecting and handling errors!!
     /////////////////////////////////////////
-
-
-    /**
-     * Print any log/error message to console Use this for debugging, not for
- messages to the user - throw a OlympicsDBException instead.
-     *
-     * @param message
-     */
-    private void complain(String message) {
-        System.err.println("DatabaseBackend: " + message);
-    }
 
     /**
      * Default constructor that simply loads the JDBC driver and sets to the

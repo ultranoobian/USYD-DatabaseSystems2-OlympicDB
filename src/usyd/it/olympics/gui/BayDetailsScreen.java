@@ -2,6 +2,8 @@ package usyd.it.olympics.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
@@ -38,17 +40,17 @@ public class BayDetailsScreen extends GuiScreen {
         });   
     }
 
-    public void showBayDetails(BayDetails m) {
-        bayId = m.getBayId();
+    public void showBayDetails(HashMap<String, Object> bay) {
+        bayId = bay.getBayId();
         btnMakeBooking.setEnabled(true);
-        String s = "Name: " + m.getSite()
-                + "\nAddress: " + m.getHouseNum() + " " + m.getStreet()
-                + ", " + m.getCity()
-                + "\nGPS co-ords: (" + m.getGpsLong() + "," + m.getGpsLat() + ")"
-                + "\nWeekday availability: " + m.getWkAvailStart() + ":00 to " + m.getWkAvailEnd() + ":00"
-                + "\nWeekend availability: " + m.getWeAvailStart() + ":00 to " + m.getWeAvailEnd() + ":00";
+        String s = "Name: " + bay.getSite()
+                + "\nAddress: " + bay.getHouseNum() + " " + bay.getStreet()
+                + ", " + bay.getCity()
+                + "\nGPS co-ords: (" + bay.getGpsLong() + "," + bay.getGpsLat() + ")"
+                + "\nWeekday availability: " + bay.getWkAvailStart() + ":00 to " + bay.getWkAvailEnd() + ":00"
+                + "\nWeekend availability: " + bay.getWeAvailStart() + ":00 to " + bay.getWeAvailEnd() + ":00";
 
-        int[] hours = m.getTodayHours();
+        int[] hours = bay.getTodayHours();
         if (hours.length<1) {
             s = s.concat("\nThere is no availability today");
         } else {

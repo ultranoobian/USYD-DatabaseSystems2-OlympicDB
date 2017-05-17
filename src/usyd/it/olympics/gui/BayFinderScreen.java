@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -81,8 +83,8 @@ public class BayFinderScreen extends GuiScreen {
         });
     }
 
-    public void showBays(ArrayList<BayListLineDetails> bays) {
-        bayList.update(bays);
+    public void showBays(ArrayList<HashMap<String, Object>> bays) {
+        //bayList.update(bays);
     }
 
     @SuppressWarnings("serial")

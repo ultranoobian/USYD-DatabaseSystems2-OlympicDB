@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -61,12 +62,12 @@ public class BookingHistoryScreen extends GuiScreen {
 
     }
 
-    public void showBookings(ArrayList<BayBookingListLine> newBookings) {
-            if(newBookings == null) { // Prevent nullpointer exceptions
+    public void showBookings(ArrayList<HashMap<String, Object>> bookings) {
+            if(bookings == null) { // Prevent nullpointer exceptions
                     bookingList.update(new ArrayList<BayBookingListLine>());
                     btnGetDetails.setEnabled(false);
             } else {
-                    bookingList.update(newBookings);
+                    bookingList.update(bookings);
             }
     }
 
