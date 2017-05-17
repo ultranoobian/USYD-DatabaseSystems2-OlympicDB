@@ -7,15 +7,22 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
+
 import usyd.it.olympics.OlympicsDBClient;
 import usyd.it.olympics.data.BayListLineDetails;
 
 public class BayFinderScreen extends GuiScreen {
-    private final BayListTabelModel bayList = new BayListTabelModel();
+    private final HashMapTupleTabelModel bayList = new HashMapTupleTabelModel(BayListLineDetails.idName, BayListLineDetails.columnNames, BayListLineDetails.columnClasses);
     private final ListSelectionModel baySelection;
     private final JTextField txtAddress;
 
@@ -65,7 +72,7 @@ public class BayFinderScreen extends GuiScreen {
             public void actionPerformed(ActionEvent arg0) {
                 int selectionIndex = baySelection.getMinSelectionIndex();
                 if (selectionIndex >= 0) {
-                    client_.getBayDetails(bayList.getBayId(selectionIndex));
+                    client_.getBayDetails(bayList.getTupleId(selectionIndex));
                 }
             }
         });
@@ -87,72 +94,4 @@ public class BayFinderScreen extends GuiScreen {
         //bayList.update(bays);
     }
 
-    @SuppressWarnings("serial")
-    class BayListTabelModel extends AbstractTableModel {
-
-        private ArrayList<BayListLineDetails> bays;
-        private final String[] columnNames = {"Site", "Number", "Address", "City"};
-        private final Class<?>[] columnClasses = {String.class, String.class, String.class, String.class};
-
-        @Override
-        public Class<?> getColumnClass(int columnIndex) {
-            return columnClasses[columnIndex];
-        }
-
-        public BayListTabelModel() {
-            bays = new ArrayList<BayListLineDetails>();
-        }
-
-        /**
-         * Update the table with newly supplied data
-         *
-         * @param newBayDetails New list of bays
-         */
-        public void update(ArrayList<BayListLineDetails> newBayDetails) {
-            this.bays = newBayDetails;
-            super.fireTableDataChanged();
-        }
-
-        public int getBayId(int row) {
-            return bays.get(row).getBayId();
-        }
-        /*
-         * AbstractTableModel methods
-         */
-        @Override
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        @Override
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        @Override
-        public int getRowCount() {
-            return bays.size();
-        }
-
-        @Override
-        public Object getValueAt(int row, int col) {
-            Object o = null;
-            BayListLineDetails bay = bays.get(row);
-            switch (col) {
-                case 0:
-                    o = bay.getSite();
-                    break;
-                case 1:
-                    o = bay.getHouseNum();
-                    break;
-                case 2:
-                    o = bay.getStreet();
-                    break;
-                case 3:
-                    o = bay.getCity();
-                    break;
-            }
-            return o;
-        }
-    }
 }

@@ -5,6 +5,10 @@ package usyd.it.olympics.data;
  * @author Bryn
  */
 public class BayListLineDetails {
+    public static final String idName = "bay_id";
+	public static final String[] columnNames = {"Site", "Number", "Address", "City"};
+	public static final Class<?>[] columnClasses = {String.class, String.class, String.class, String.class};
+
     private final int bayId_;
     private final String site_;
     private final String houseNum_;

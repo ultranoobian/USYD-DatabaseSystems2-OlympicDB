@@ -17,13 +17,12 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import usyd.it.olympics.OlympicsDBClient;
 import usyd.it.olympics.data.BookingTuple;
 
 public class BookingHistoryScreen extends GuiScreen {
-    private final BookingsTabelModel bookingList = new BookingsTabelModel();
+    private final HashMapTupleTabelModel bookingList = new HashMapTupleTabelModel(BookingTuple.idName, BookingTuple.columnNames, BookingTuple.columnClasses);
     private final JButton btnGetDetails;
     private final ListSelectionModel baySelection;
 
@@ -49,7 +48,7 @@ public class BookingHistoryScreen extends GuiScreen {
             public void actionPerformed(ActionEvent arg0) {
                 int index = baySelection.getMinSelectionIndex();
                 if (index>=0)
-                    client_.showBookingDetails(bookingList.getBookingId(index));
+                    client_.showBookingDetails(bookingList.getTupleId(index));
                 }
         }); 
         
@@ -83,64 +82,6 @@ public class BookingHistoryScreen extends GuiScreen {
             }
             setText((value == null) ? "" : formatter.format(value));
         }
-    }
-    
-    @SuppressWarnings("serial")
-    class BookingsTabelModel extends AbstractTableModel {
-            private ArrayList<HashMap<String, Object>> bookings;
-
-            private final String idName = BookingTuple.idName;
-            private final String [] columnNames = BookingTuple.columnNames;
-            private final Class<?>[] columnClasses = BookingTuple.columnClasses;
-
-        public Class<?> getColumnClass(int columnIndex) {
-                    return columnClasses[columnIndex];
-            }
-
-        public BookingsTabelModel() {
-            bookings = new ArrayList<HashMap<String, Object>>();
-            }
-
-            /**
-                * Update the table with newly supplied data
-                * @param newCars New list of cars
-                */
-            public void update(ArrayList<HashMap<String, Object>> newBookings) {
-                    bookings = newBookings;
-                    super.fireTableDataChanged();
-            }
-            
-            public Integer getBookingId(int row) {
-                HashMap<String, Object> booking = bookings.get(row);
-				return booking==null ? null : (Integer) booking.get(idName);
-            }
-
-            /*
-                * AbstractTableModel methods
-                */
-            @Override
-            public String getColumnName(int col) {
-                    return columnNames[col];
-            }
-
-            @Override
-            public int getColumnCount() {
-                    return columnNames.length;
-            }
-
-            @Override
-            public int getRowCount() {
-                    return bookings.size();
-            }
-
-            @Override
-            public Object getValueAt(int row, int col) {
-                Object o=null;
-                HashMap<String, Object> booking = bookings.get(row);
-                o = booking!=null && col>=0 && col<columnNames.length ? booking.get(columnNames[col]) : null;
-                return o;
-            }
-
     }
 	
 }
