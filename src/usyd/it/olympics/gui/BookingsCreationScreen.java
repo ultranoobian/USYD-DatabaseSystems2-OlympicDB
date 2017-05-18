@@ -1,41 +1,48 @@
 package usyd.it.olympics.gui;
 
+import java.awt.Component;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
-import java.util.Date;
-import java.util.Calendar;
-import javax.swing.JButton;
-import java.awt.GridLayout;
-import java.awt.Component;
-import javax.swing.Box;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.SpinnerListModel;
+
 import usyd.it.olympics.OlympicsDBClient;
 
 public class BookingsCreationScreen extends GuiScreen {
-    private Integer bayId;
     private SpinnerDateModel startDates = new SpinnerDateModel(new Date(1305554400000L), null, null, Calendar.HOUR_OF_DAY);
     private SpinnerDateModel endDates = new SpinnerDateModel(new Date(1305554400000L), null, null, Calendar.HOUR_OF_DAY);
-    private final SpinnerListModel carNameModel;
-    private HashMap<Integer, String> carList;
+	private JTextField txtMemberName;
+	private JTextField txtVehicleCode;
+    //private final SpinnerListModel listModel;
+    //private ArrayList<Integer> list;
 
     public BookingsCreationScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new GridLayout(0, 2, 0, 0));
 
-        JLabel lblCarName = new JLabel("Car Name:");
+        JLabel lblCarName = new JLabel("Vehicle:");
         panel_.add(lblCarName);
-
-        JSpinner carSpinner = new JSpinner();
-        String[] tempNames = {"(Empty)"};
-        carNameModel = new SpinnerListModel(tempNames);
-        carSpinner.setModel(carNameModel);
-        panel_.add(carSpinner);
+        txtVehicleCode = new JTextField();
+        panel_.add(txtVehicleCode);
+        
+//      JSpinner listSpinner = new JSpinner();
+//      String[] tempNames = {"(Empty)"};
+//      listModel = new SpinnerListModel(tempNames);
+//      listSpinner.setModel(listModel);
+//      panel_.add(listSpinner);
+        
+        JLabel lblMember = new JLabel("Member:");
+        panel_.add(lblMember);
+        txtMemberName = new JTextField();
+        panel_.add(txtMemberName);
 
         JLabel lblStartDate = new JLabel("Start");
         panel_.add(lblStartDate);
@@ -57,26 +64,36 @@ public class BookingsCreationScreen extends GuiScreen {
         JButton btnSubmitBooking = new JButton("Submit Booking");
         btnSubmitBooking.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                client_.makeBooking(bayId, getCarId(), (Date)startDates.getValue(), (Date)endDates.getValue());
+                client_.makeBooking(getMember(), getVehicle(), getDepartTime());
             }
         });
         panel_.add(btnSubmitBooking);
     }
 
-    private Integer getCarId() {
-        String carName = (String)carNameModel.getValue();
-        for (Map.Entry<Integer, String> entry : carList.entrySet()) {
-            if(carName.equals(entry.getValue())) {
-                return entry.getKey();
-            }
-        }
-        return null;
+    private String getVehicle() {
+        // TODO: allow pick from spinner
+//      String carName = (String)listModel.getValue();
+//		for (Integer entry : list) {
+//            if(carName.equals(entry.getValue())) {
+//                return entry.getKey();
+//            }
+//        }
+        return txtVehicleCode.getText();
+    }
+
+    private String getMember() {
+        return txtMemberName.getText();
     }
     
-    public void startBooking(int bay, HashMap<Integer, String> cars) {
-        bayId = bay;
-        carList = cars;
-        carNameModel.setList(new ArrayList<String>(carList.values()));
+    public void startBooking() {
+
     }
+
+	/**
+	 * @return
+	 */
+	private Date getDepartTime() {
+		return (Date)startDates.getValue();
+	}
 
 }

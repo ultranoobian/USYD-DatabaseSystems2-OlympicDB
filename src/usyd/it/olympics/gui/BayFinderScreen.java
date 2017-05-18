@@ -19,27 +19,27 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import usyd.it.olympics.OlympicsDBClient;
-import usyd.it.olympics.data.BayListLineDetails;
+import usyd.it.olympics.data.Place;
 
 public class BayFinderScreen extends GuiScreen {
-    private final HashMapTupleTabelModel bayList = new HashMapTupleTabelModel(BayListLineDetails.idName, BayListLineDetails.columnNames, BayListLineDetails.columnClasses);
-    private final ListSelectionModel baySelection;
+    private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(Place.idName, Place.attributeNames, Place.attributeClasses);
+    private final ListSelectionModel listSelection;
     private final JTextField txtAddress;
 
     public BayFinderScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BoxLayout(panel_, BoxLayout.Y_AXIS));
 
-        JPanel bayChoicePanel = new JPanel();
-        bayChoicePanel.setMaximumSize(new Dimension(32767, 23));
-        panel_.add(bayChoicePanel);
-        bayChoicePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        JPanel choicePanel = new JPanel();
+        choicePanel.setMaximumSize(new Dimension(32767, 23));
+        panel_.add(choicePanel);
+        choicePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
         JLabel lblAddress = new JLabel("Address");
-        bayChoicePanel.add(lblAddress);
+        choicePanel.add(lblAddress);
         txtAddress = new JTextField();
         txtAddress.setText("address");
-        bayChoicePanel.add(txtAddress);
+        choicePanel.add(txtAddress);
         txtAddress.setColumns(20);
         
         JButton btnUpdate = new JButton("Search");
@@ -48,17 +48,17 @@ public class BayFinderScreen extends GuiScreen {
                         client_.showMatchingBays(txtAddress.getText());
                 }
         });
-        bayChoicePanel.add(btnUpdate);
+        choicePanel.add(btnUpdate);
         
         // Listing results
-        JScrollPane bayListScrollPane = new JScrollPane();
-        panel_.add(bayListScrollPane);
+        JScrollPane listScrollPane = new JScrollPane();
+        panel_.add(listScrollPane);
 
-        JTable bayListTable = new JTable();
-        bayListTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        bayListTable.setModel(bayList);
-        baySelection = bayListTable.getSelectionModel();
-        bayListScrollPane.setViewportView(bayListTable);
+        JTable listTable = new JTable();
+        listTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listTable.setModel(list);
+        listSelection = listTable.getSelectionModel();
+        listScrollPane.setViewportView(listTable);
 
 
         JPanel selectionOptionsPanel = new JPanel();
@@ -70,9 +70,9 @@ public class BayFinderScreen extends GuiScreen {
         btnGetDetails.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                int selectionIndex = baySelection.getMinSelectionIndex();
+                int selectionIndex = listSelection.getMinSelectionIndex();
                 if (selectionIndex >= 0) {
-                    client_.getBayDetails(bayList.getTupleId(selectionIndex));
+                    client_.getBayDetails(list.getTupleId(selectionIndex));
                 }
             }
         });
@@ -80,7 +80,7 @@ public class BayFinderScreen extends GuiScreen {
         // Only allow row-specific buttons to work if a row has been selected
         btnGetDetails.setEnabled(false);
 
-        baySelection.addListSelectionListener(new ListSelectionListener() {
+        listSelection.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 ListSelectionModel lsm = (ListSelectionModel) e.getSource();
@@ -90,8 +90,8 @@ public class BayFinderScreen extends GuiScreen {
         });
     }
 
-    public void showBays(ArrayList<HashMap<String, Object>> bays) {
-        //bayList.update(bays);
+    public void showTuples(ArrayList<HashMap<String, Object>> newTuples) {
+        list.update(newTuples);
     }
 
 }

@@ -8,7 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import usyd.it.olympics.OlympicsDBClient;
-import usyd.it.olympics.data.BayDetails;
+import usyd.it.olympics.data.PlaceDetails;
 
 /**
  * Very simple bay details screen, cloned from HomeScreen
@@ -41,12 +41,12 @@ public class BayDetailsScreen extends GuiScreen {
     }
 
     public void showBayDetails(HashMap<String, Object> bay) {
-        bayId = (Integer) bay.get(BayDetails.BAYID);
+        bayId = (Integer) bay.get(PlaceDetails.BAYID);
         btnMakeBooking.setEnabled(true);
-        String s = "Name: " + bay.get(BayDetails.SITE)
-                + "\nAddress: " + bay.get(BayDetails.HOUSENUM) + " " + bay.get(BayDetails.STREET)
-                + ", " + bay.get(BayDetails.CITY)
-                + "\nGPS co-ords: (" + bay.get(BayDetails.GPSLONG) + "," + bay.get(BayDetails.GPSLAT) + ")";
+        String s = "Name: " + bay.get(PlaceDetails.SITE)
+                + "\nAddress: " + bay.get(PlaceDetails.HOUSENUM) + " " + bay.get(PlaceDetails.STREET)
+                + ", " + bay.get(PlaceDetails.CITY)
+                + "\nGPS co-ords: (" + bay.get(PlaceDetails.GPSLONG) + "," + bay.get(PlaceDetails.GPSLAT) + ")";
 
 //        int[] hours = (int[]) bay.get(BayDetails.TODAYHOURS);
 //        if (hours.length<1) {

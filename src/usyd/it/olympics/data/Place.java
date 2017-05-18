@@ -1,13 +1,16 @@
 package usyd.it.olympics.data;
 
+import java.util.HashMap;
+
 /**
  * Class to hold details for a bay as used by BayFinderScreen
  * @author Bryn
  */
-public class BayListLineDetails {
+public class Place {
     public static final String idName = "bay_id";
-	public static final String[] columnNames = {"Site", "Number", "Address", "City"};
-	public static final Class<?>[] columnClasses = {String.class, String.class, String.class, String.class};
+	public static final String[] attributeNames = {"Site", "Number", "Address", "City"};
+	public static final Class<?>[] attributeClasses = {String.class, String.class, String.class, String.class};
+	private static final String PLACEID = "place_id";
 
     private final int bayId_;
     private final String site_;
@@ -19,7 +22,7 @@ public class BayListLineDetails {
      * Create a new object to hold the details for a bay
      *
      */
-    public BayListLineDetails(int bayId, String site, String houseNum, String street, String city) {
+    public Place(int bayId, String site, String houseNum, String street, String city) {
         bayId_ = bayId;
         site_ = site;
         houseNum_ = houseNum;
@@ -61,5 +64,9 @@ public class BayListLineDetails {
     public String getCity() {
         return city_;
     }
+
+	public static Integer getPlaceId(HashMap<String, Object> place) {
+		return (Integer) place.get(PLACEID);
+	}
 
 }

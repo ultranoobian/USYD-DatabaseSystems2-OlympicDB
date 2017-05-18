@@ -1,6 +1,7 @@
 package usyd.it.olympics.data;
 
 import java.util.Date;
+import java.util.HashMap;
 
 public class Booking {
     String vehicle_;                    // Vehicle code
@@ -43,6 +44,12 @@ public class Booking {
     public Date getWhenBooked(){
         return whenBooked_;
     }
+
+	public static String getSummary(HashMap<String, Object> bookingDetails) {
+        // TODO: Construct a more useful message based on the contents of bookingDetails
+    	String summary = "Display of booking details not yet implemented";
+		return summary;
+	}
 
 
 

@@ -1,7 +1,9 @@
 package usyd.it.olympics.gui;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JTextPane;
+
 import usyd.it.olympics.OlympicsDBClient;
 
 public class ReportScreen extends GuiScreen {
@@ -16,7 +18,7 @@ public class ReportScreen extends GuiScreen {
 
     }
 
-    public void show(String text) {
-        reportPane.setText(text);
+    public void show(String string) {
+        reportPane.setText(string);
     }
 }

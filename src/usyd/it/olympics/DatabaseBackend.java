@@ -8,11 +8,9 @@ package usyd.it.olympics;
  * communicate with the database and pass the results back to the GUI.
  *
  *
- * Make sure you update the dbname variable to your own database name. If you
- * want to run this class on its own you also need to put your login details
- * (userid and password) into main() at the bottom of the file.
+ * Make sure you update the dbname variable to your own database name. You
+ * can run this class on its own for testing without requiring the GUI.
  */
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -29,6 +27,9 @@ import usyd.it.olympics.data.OlympicJourney;
 /**
  * Database interfacing backend for client. This class uses JDBC to connect to
  * the database, and provides methods to obtain query data.
+ * 
+ * Most methods return database information in the form of HashMaps (sets of 
+ * key-value pairs), or ArrayLists of HashMaps for multiple results.
  *
  * @author Bryn Jeffries {@literal <bryn.jeffries@sydney.edu.au>}
  */
@@ -263,43 +264,42 @@ public class DatabaseBackend {
         return details;
     }
     
-    HashMap<Integer, String> getMemberCars() throws OlympicsDBException {
-        HashMap<Integer, String> cars = new HashMap<Integer, String>();
+    HashMap<String, Object> getMemberHome(String member) throws OlympicsDBException {
+    	HashMap<String, Object> home = new HashMap<String, Object>();
         
-        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
-        cars.put(7863,"Growler");
-        cars.put(8973,"Rumbler");
-        cars.put(9331,"Lemon");        
+        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION    
         
-        return cars;
+        return home;
     }
 
-    public String makeBooking(int bay, int car, Date bookingStart, Date bookingEnd) throws OlympicsDBException {
-        String newBooking;
-
+    public HashMap<String,Object> makeBooking(String byStaff, String forMember, Date departs) throws OlympicsDBException {
+    	HashMap<String,Object> booking = null;
+    	
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
-        newBooking = "SUCCESS!\nBooking made for bay at"
-                + "\nLot 3, 4B Yoda Lane,"
-                + "\nDantooine"
-                + "\n\nFor your car Annie (TRS874)"
-                + "\nOn Tuesday, May 18 2015"
-                + "\nFrom 8am to 10am"
-                + "\nPrice $10.05";
-
-        return newBooking;
+    	booking = new HashMap<String,Object>();
+        booking.put("vehicle", "TR870R");
+    	booking.put("start_day", "21/12/2020");
+    	booking.put("start_time", new Date());
+    	booking.put("to", "SIT");
+    	booking.put("from", "Wentworth");
+    	booking.put("booked_by", "Mike");
+    	booking.put("whenbooked", new Date());
+    	return booking;
     }
     
-    public String getBookingDetails(int bookingId) throws OlympicsDBException {
-        String booking;
+    public HashMap<String,Object> getBookingDetails(String memberID, int journeyId) throws OlympicsDBException {
+    	HashMap<String,Object> booking = null;
 
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
-        booking = "Booking made for bay at"
-                + "\nSpace 4, 84 Water Lane,"
-                + "\nGordon Hill"
-                + "\n\nFor your car Yasmine (VFG434)"
-                + "\nOn Monday,April 21 2014"
-                + "\nFrom 9am to 2pm"
-                + "\nPrice $21.12";
+    	booking = new HashMap<String,Object>();
+
+        booking.put("vehicle", "TR870R");
+    	booking.put("start_day", "21/12/2020");
+    	booking.put("start_time", new Date());
+    	booking.put("to", "SIT");
+    	booking.put("from", "Wentworth");
+    	booking.put("booked_by", "Mike");
+    	booking.put("whenbooked", new Date());
 
         return booking;
     }
