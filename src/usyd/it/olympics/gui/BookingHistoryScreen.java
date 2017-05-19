@@ -19,6 +19,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import usyd.it.olympics.OlympicsDBClient;
+import usyd.it.olympics.OlympicsDBException;
 import usyd.it.olympics.data.Booking;
 
 public class BookingHistoryScreen extends GuiScreen {
@@ -51,7 +52,11 @@ public class BookingHistoryScreen extends GuiScreen {
             public void actionPerformed(ActionEvent arg0) {
                 int index = baySelection.getMinSelectionIndex();
                 if (index>=0)
-                    client_.showBookingDetails(Booking.getJourneyId(bookingList.getTuple(index)));
+					try {
+						client_.showBookingDetails(Booking.getJourneyId(bookingList.getTuple(index)));
+					} catch (OlympicsDBException e) {
+						// Shouldn't happen, so just swallow it
+					}
                 }
         }); 
         
