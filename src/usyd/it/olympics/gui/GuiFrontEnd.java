@@ -35,9 +35,9 @@ public final class GuiFrontEnd {
     //
     // References to individual mainPanel screens
     //
-    private final BayFinderScreen bayFinderScreen;
+    private final JourneyFinderScreen journeyFinderScreen;
     private final HomeScreen mainMenuScreen;
-    private final BayDetailsScreen bayDetailsScreen;
+    private final JourneyDetailsScreen journeyDetailsScreen;
     private final ReportScreen generalReportScreen;
     private final BookingsCreationScreen bookingsCreationScreen;
     private final BookingHistoryScreen historyScreen;
@@ -47,7 +47,7 @@ public final class GuiFrontEnd {
     private final HashMap<String, JButton> buttons = new HashMap<String, JButton>();
     private final String optHome;
 //    private final String optFavourite;
-    private final String optBrowseBays = "Browse Bays";
+    private final String optBrowseJourneys = "Browse Journeys";
     private final String optHistory = "Booking History";
     private final String optLogOut = "Log Out";
     
@@ -75,19 +75,11 @@ public final class GuiFrontEnd {
                 client.showMemberDetails();
             }
         });
-
-//        optFavourite = "Favourite";
-//        addMenuOption(optFavourite, new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent arg0) {
-//                client.showFavouriteBay();
-//            }
-//        });
         
-        addMenuOption(optBrowseBays, new ActionListener() {
+        addMenuOption(optBrowseJourneys, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                client.showBayAvailability();
+                client.showJourneyAvailability();
             }
         });
 
@@ -125,8 +117,8 @@ public final class GuiFrontEnd {
 
         registerScreen(new LoginScreen(root), "loginScreen");
         registerScreen(mainMenuScreen = new HomeScreen(root), "mainMenuScreen");
-        registerScreen(bayFinderScreen = new BayFinderScreen(root), "bayFinderScreen");
-        registerScreen(bayDetailsScreen = new BayDetailsScreen(root), "bayDetailsScreen");
+        registerScreen(journeyFinderScreen = new JourneyFinderScreen(root), "journeyFinderScreen");
+        registerScreen(journeyDetailsScreen = new JourneyDetailsScreen(root), "journeyDetailsScreen");
         registerScreen(generalReportScreen = new ReportScreen(root), "generalReportScreen");
         registerScreen(historyScreen = new BookingHistoryScreen(root), "historyScreen");
         registerScreen(bookingsCreationScreen = new BookingsCreationScreen(root), "bookingsCreationScreen");
@@ -158,21 +150,15 @@ public final class GuiFrontEnd {
         setNavButtons(true);
         setNavButton(optHome, false);
     }
-
-//    public void showBayStatusScreen() {
-//        screenSelect.show(mainPanel, "bayStatusScreen");
-//        setNavButtons(true);
-////        setNavButton(optFavourite, false);
-//    }
         
-    public void showBayFinderScreen() {
-        screenSelect.show(mainPanel, "bayFinderScreen");
+    public void showJourneyFinderScreen() {
+        screenSelect.show(mainPanel, "journeyFinderScreen");
         setNavButtons(true);
-        setNavButton(optBrowseBays, false);
+        setNavButton(optBrowseJourneys, false);
     }
     
-    public void showBayDetailsScreen() {
-        screenSelect.show(mainPanel, "bayDetailsScreen");
+    public void showJourneyDetailsScreen() {
+        screenSelect.show(mainPanel, "journeyDetailsScreen");
         setNavButtons(true);
     }
 
@@ -199,16 +185,16 @@ public final class GuiFrontEnd {
         return mainMenuScreen;
     }
        
-    public BayFinderScreen getBayFinderScreen() {
-        return bayFinderScreen;
+    public JourneyFinderScreen getJourneyFinderScreen() {
+        return journeyFinderScreen;
     }    
     
     public ReportScreen getReportScreen() {
         return generalReportScreen;
     }
     
-    public BayDetailsScreen getBayDetailsScreen() {
-        return bayDetailsScreen;
+    public JourneyDetailsScreen getJourneyDetailsScreen() {
+        return journeyDetailsScreen;
     }
     
     public BookingHistoryScreen getHistoryScreen() {

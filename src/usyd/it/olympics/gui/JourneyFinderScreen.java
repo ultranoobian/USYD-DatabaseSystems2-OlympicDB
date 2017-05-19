@@ -21,12 +21,12 @@ import javax.swing.event.ListSelectionListener;
 import usyd.it.olympics.OlympicsDBClient;
 import usyd.it.olympics.data.Place;
 
-public class BayFinderScreen extends GuiScreen {
+public class JourneyFinderScreen extends GuiScreen {
     private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(new Place());
     private final ListSelectionModel listSelection;
     private final JTextField txtAddress;
 
-    public BayFinderScreen(OlympicsDBClient r) {
+    public JourneyFinderScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BoxLayout(panel_, BoxLayout.Y_AXIS));
 
@@ -45,7 +45,7 @@ public class BayFinderScreen extends GuiScreen {
         JButton btnUpdate = new JButton("Search");
         btnUpdate.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent arg0) {
-                        client_.showMatchingBays(txtAddress.getText());
+                        client_.showMatchingJourneys(txtAddress.getText());
                 }
         });
         choicePanel.add(btnUpdate);
@@ -72,7 +72,7 @@ public class BayFinderScreen extends GuiScreen {
             public void actionPerformed(ActionEvent arg0) {
                 int selectionIndex = listSelection.getMinSelectionIndex();
                 if (selectionIndex >= 0) {
-                    client_.getBayDetails(list.getTuple(selectionIndex));
+                    client_.getJourneyDetails(list.getTuple(selectionIndex));
                 }
             }
         });

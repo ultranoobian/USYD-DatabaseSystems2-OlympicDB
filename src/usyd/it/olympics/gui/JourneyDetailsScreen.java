@@ -11,15 +11,15 @@ import usyd.it.olympics.OlympicsDBClient;
 import usyd.it.olympics.data.PlaceDetails;
 
 /**
- * Very simple bay details screen, cloned from HomeScreen
+ * Very simple details screen, cloned from HomeScreen
  * @author Bryn
  */
-public class BayDetailsScreen extends GuiScreen {
+public class JourneyDetailsScreen extends GuiScreen {
 
     private final JTextArea description;
     private final JButton btnMakeBooking;
     private Integer bayId;
-    public BayDetailsScreen(OlympicsDBClient r) {
+    public JourneyDetailsScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BoxLayout(panel_, BoxLayout.Y_AXIS));
 
@@ -40,7 +40,7 @@ public class BayDetailsScreen extends GuiScreen {
         });   
     }
 
-    public void showBayDetails(HashMap<String, Object> bay) {
+    public void showJourneyDetails(HashMap<String, Object> bay) {
         bayId = (Integer) bay.get(PlaceDetails.BAYID);
         btnMakeBooking.setEnabled(true);
         String s = "Name: " + bay.get(PlaceDetails.SITE)

@@ -17,7 +17,7 @@ public class OlympicsDBClient {
     private final GuiFrontEnd gui;
     // All database operations (logging in, running queries) are performed by this object
     private DatabaseBackend db;
-	private String memberID; // Member ID
+	private String memberId; // Member ID
 	private String memberType;
 
     OlympicsDBClient(String config) {
@@ -43,13 +43,13 @@ public class OlympicsDBClient {
     public void login(String memUser, char [] memPass) {
         setMessage("Connecting to DB.");
         try {
-        	memberID = null;
+        	memberId = null;
         	HashMap<String, Object> basicDetails = db.checkLogin(memUser, memPass);
             if(basicDetails!=null) {
-            	memberID = memUser;
+            	memberId = memUser;
             	memberType = (String) basicDetails.get("member_type");
             	setMessage("Verified login, Fetching member details");
-            	HashMap<String, Object> fullDetails = db.memberDetails(memberID, memberType);
+            	HashMap<String, Object> fullDetails = db.memberDetails(memberId, memberType);
             	gui.getMainMenuScreen().showMemberDetails(fullDetails);
             	gui.showMainMenuScreen();
             	setMessage("Login successful.");
@@ -63,7 +63,7 @@ public class OlympicsDBClient {
 
     public void logout() {
         setMessage("Logging out");
-        memberID = null;
+        memberId = null;
         gui.showLoginScreen();
         setMessage("Logged out");
     }
@@ -74,7 +74,7 @@ public class OlympicsDBClient {
     public void showMemberDetails() {
         setMessage("Fetching member details.");
         try {
-            HashMap<String, Object> member = db.memberDetails(memberID, memberType);
+            HashMap<String, Object> member = db.memberDetails(memberId, memberType);
             gui.getMainMenuScreen().showMemberDetails(member);
             gui.showMainMenuScreen();
             setMessage("Details fetched.");
@@ -101,32 +101,32 @@ public class OlympicsDBClient {
     }
 
     //
-    // Bay Finder
+    // Journey Finder
     //
-    public void showMatchingBays(String address) {
-        setMessage("Fetching bay availabilities.");
+    public void showMatchingJourneys(String address) {
+        setMessage("Fetching journey availabilities.");
         try {
-            ArrayList<HashMap<String, Object>> bays = db.getMatchingBays(address);
-            gui.getBayFinderScreen().showTuples(bays);
-            setMessage("All bays fetched.");
+            ArrayList<HashMap<String, Object>> journeys = db.getMatchingJourneys(address);
+            gui.getJourneyFinderScreen().showTuples(journeys);
+            setMessage("All journeys fetched.");
         } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
-            gui.getBayFinderScreen().showTuples(new ArrayList<HashMap<String, Object>>());
+            gui.getJourneyFinderScreen().showTuples(new ArrayList<HashMap<String, Object>>());
         }
-        gui.showBayFinderScreen();
+        gui.showJourneyFinderScreen();
     }
     
-    public void showBayAvailability() {
-        setMessage("Fetching bay availabilities.");
-        gui.showBayFinderScreen();
+    public void showJourneyAvailability() {
+        setMessage("Fetching journey availabilities.");
+        gui.showJourneyFinderScreen();
     }
     
-    public void getBayDetails(HashMap<String, Object> hashMap) {
+    public void getJourneyDetails(HashMap<String, Object> hashMap) {
         setMessage("Retrieving details");
         try {
-        	HashMap<String, Object> details = db.getBayDetails(0);//hashMap);
-            gui.getBayDetailsScreen().showBayDetails(details);
-            gui.showBayDetailsScreen();
+        	HashMap<String, Object> details = db.getJourneyDetails(0);//hashMap);
+            gui.getJourneyDetailsScreen().showJourneyDetails(details);
+            gui.showJourneyDetailsScreen();
             setMessage("Details retrieved");
         } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
@@ -136,7 +136,7 @@ public class OlympicsDBClient {
     public void makeBooking(String forMember, String vehicle, Date departs) {
         setMessage("Submitting booking");
         try {
-        	HashMap<String,Object> bookingDetails = db.makeBooking(memberID, 
+        	HashMap<String,Object> bookingDetails = db.makeBooking(memberId, 
         			forMember, departs);
         	if(bookingDetails==null) {
                 setMessage("Could not make booking");
@@ -150,26 +150,10 @@ public class OlympicsDBClient {
         }
     }
     
-//    public void showFavouriteBay() {
-//        setMessage("Retrieving bay details");
-//        try {
-//        	HashMap<String,Object> bay = db.getFavouriteBay();
-//            if (bay == null)
-//                setMessage("No bay details found");
-//            else {    
-//                gui.getBayDetailsScreen().showBayDetails(bay);
-//                gui.showBayDetailsScreen();
-//                setMessage("Bay details retrieved");
-//            }
-//        } catch (OlympicsDBException e) {
-//            setMessage(e.getMessage());
-//        }    
-//    }
-
     public void showHistory() {
         setMessage("Fetching booking history.");
         try {
-            ArrayList<HashMap<String,Object>> bookings = db.allBookings(memberID);
+            ArrayList<HashMap<String,Object>> bookings = db.allBookings(memberId);
             gui.getHistoryScreen().showBookings(bookings);
             gui.showHistoryScreen();
             setMessage("All bookings fetched.");
@@ -178,11 +162,11 @@ public class OlympicsDBClient {
         }    
     }
 
-    public void startBooking(int bayId) {
+    public void startBooking(int journeyId) {
         setMessage("Fetching details to start booking.");
         //HashMap<String, Object> place = db.getMemberHome(memberID);
 		//Integer placeid = Place.getPlaceId(place);
-		gui.getBookingsCreationScreen().startBooking();
+		gui.getBookingsCreationScreen().startBooking(journeyId, memberId);
 		gui.showBookingsCreationScreen();
 		setMessage("Details fetched."); 
     }
@@ -190,7 +174,7 @@ public class OlympicsDBClient {
     public void showBookingDetails(int journeyid) {
        setMessage("Getting booking details");
         try {
-        	HashMap<String,Object> bookingDetails = db.getBookingDetails(memberID, journeyid);
+        	HashMap<String,Object> bookingDetails = db.getBookingDetails(memberId, journeyid);
             gui.getReportScreen().show(BookingDetails.getSummary(bookingDetails));
             gui.showReportScreen();
             setMessage("Details fetched.");

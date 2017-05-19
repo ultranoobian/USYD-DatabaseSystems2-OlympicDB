@@ -85,7 +85,7 @@ public class BookingsCreationScreen extends GuiScreen {
         return txtMemberName.getText();
     }
     
-    public void startBooking() {
+    public void startBooking(int journeyId, String memberId) {
 
     }
 

@@ -248,7 +248,7 @@ public class DatabaseBackend {
      * @return list of bays
      * @throws OlympicsDBException
      */
-    public ArrayList<HashMap<String,Object>> getMatchingBays(String address) throws OlympicsDBException {
+    public ArrayList<HashMap<String,Object>> getMatchingJourneys(String address) throws OlympicsDBException {
         ArrayList<HashMap<String,Object>> bays = new ArrayList<HashMap<String,Object>>();
 
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
@@ -267,7 +267,7 @@ public class DatabaseBackend {
      * @return Various details of hunt - see BayDetails.java
      * @throws OlympicsDBException
      */
-    public HashMap<String,Object> getBayDetails(int bay) throws OlympicsDBException {
+    public HashMap<String,Object> getJourneyDetails(int bay) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
         // See the constructor in BayDetails.java
     	HashMap<String,Object> details = new HashMap<String,Object>();
