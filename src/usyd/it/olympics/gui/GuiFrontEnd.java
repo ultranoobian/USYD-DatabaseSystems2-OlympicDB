@@ -17,7 +17,9 @@ import usyd.it.olympics.OlympicsDBClient;
 
 /**
  * Main class for GUI, containing all screens and providing methods
- * to navigate between them.
+ * to navigate between them. This roughly follows a Model - View - Controller 
+ * architecture, but with this class co-ordinating all the different GuiScreen
+ * view classes.
  * @author Bryn
  */
 public final class GuiFrontEnd {
@@ -41,16 +43,18 @@ public final class GuiFrontEnd {
     private final ReportScreen generalReportScreen;
     private final BookingsCreationScreen bookingsCreationScreen;
     private final BookingHistoryScreen historyScreen;
-    
+	private final EventBrowserScreen eventBrowserScreen;    
+	
     // Navigation buttons
     private final JPanel navBar;
     private final HashMap<String, JButton> buttons = new HashMap<String, JButton>();
-    private final String optHome;
-//    private final String optFavourite;
-    private final String optBrowseJourneys = "Browse Journeys";
-    private final String optHistory = "Booking History";
-    private final String optLogOut = "Log Out";
     
+    // Navbar labels
+    private final String optHome = "Home";
+    private final String optBrowseJourneys = "Browse Journeys";
+    private final String optHistory = "Browse Bookings";
+    private final String optLogOut = "Log Out";
+	private final String optBrowseEvents = "Browse Events";   
 
     public GuiFrontEnd(OlympicsDBClient root) {
         client = root;
@@ -68,18 +72,10 @@ public final class GuiFrontEnd {
         navBar.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
         
         // Put navigation buttons in bar
-        optHome = "Home";
         addMenuOption(optHome, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 client.showMemberDetails();
-            }
-        });
-        
-        addMenuOption(optBrowseJourneys, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                client.showJourneyAvailability();
             }
         });
 
@@ -89,7 +85,22 @@ public final class GuiFrontEnd {
                 client.showHistory();
             }
         });
-
+        
+        addMenuOption(optBrowseJourneys, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                client.showJourneyAvailability();
+            }
+        });
+        // Note: Make booking 
+        
+        addMenuOption(optBrowseEvents, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                client.showEventBrowser();
+            }
+        });
+        
         addMenuOption(optLogOut, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -122,24 +133,18 @@ public final class GuiFrontEnd {
         registerScreen(generalReportScreen = new ReportScreen(root), "generalReportScreen");
         registerScreen(historyScreen = new BookingHistoryScreen(root), "historyScreen");
         registerScreen(bookingsCreationScreen = new BookingsCreationScreen(root), "bookingsCreationScreen");
-
+        registerScreen(eventBrowserScreen = new EventBrowserScreen(root), "eventBrowserScreen");
+        
         content.add(mainPanel, BorderLayout.CENTER);
         window.setContentPane(content);
         window.pack();
         window.setVisible(true);
     }
 
-    // Control all navbar buttons together
-    public void setNavButtons(boolean status) {
-        for (JButton button : buttons.values()) {
-            button.setEnabled(status);
-        }
-    }
     
-    public void setNavButton(String name, boolean status) {
-        buttons.get(name).setEnabled(status);
-    }
-    
+    //
+    // Panel navigation methods - these are called by the client object
+    //    
     public void showLoginScreen() {
         screenSelect.show(mainPanel, "loginScreen");
         setNavButtons(false);
@@ -176,11 +181,25 @@ public final class GuiFrontEnd {
         screenSelect.show(mainPanel, "bookingsCreationScreen");
         setNavButtons(true);
     }
-
+    
+    public void showEventBrowserScreen() {
+    	// FIXME: Implement
+    }
+    
+    
+    /*
+     *  Display message in status bar
+     */
     public void setStatus(String msg) {
         statusMsg.setText(msg);
     }
 
+    //
+    // Getters to each of the GuiScreen objects, so that the OlympicsDBClient 
+    // controller class can invoke their specific methods. This isn't very DRY
+    // but retains the type of each screen, avoiding having to guess methods
+    // with duck typing.
+    //
     public HomeScreen getMainMenuScreen() {
         return mainMenuScreen;
     }
@@ -204,6 +223,13 @@ public final class GuiFrontEnd {
     public BookingsCreationScreen getBookingsCreationScreen() {
         return bookingsCreationScreen;
     }
+    
+    public EventBrowserScreen getEventBrowserScreen() {
+        return eventBrowserScreen;
+    }
+    //
+    // Private utility methods
+    //
         
     private void registerScreen(GuiScreen screen, String label) {
         mainPanel.add(screen.getPanel(), label);
@@ -215,6 +241,23 @@ public final class GuiFrontEnd {
         navBar.add(button);
         buttons.put(label, button);
         return button;
+    }
+    
+
+    /*
+     *  Control all navbar buttons together
+     */
+    private void setNavButtons(boolean status) {
+        for (JButton button : buttons.values()) {
+            button.setEnabled(status);
+        }
+    }
+    
+    /*
+     * Control individual button
+     */
+    private void setNavButton(String name, boolean status) {
+        buttons.get(name).setEnabled(status);
     }
 
 }

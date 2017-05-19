@@ -320,6 +320,28 @@ public class DatabaseBackend {
 
         return booking;
     }
+    
+	public ArrayList<HashMap<String, Object>> getSports() throws OlympicsDBException {
+		ArrayList<HashMap<String,Object>> sports = new ArrayList<HashMap<String,Object>>();
+		
+		// FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
+		HashMap<String,Object> sport1 = new HashMap<String,Object>();
+		sport1.put("sport_id", Integer.valueOf(1));
+		sport1.put("sport_name", "Chillaxing");
+		sport1.put("discipline", "Couch Potatoing");
+		
+		HashMap<String,Object> sport2 = new HashMap<String,Object>();
+		sport2.put("sport_id", Integer.valueOf(2));
+		sport2.put("sport_name", "Frobnicating");
+		sport2.put("discipline", "Tweaking");
+		
+		HashMap<String,Object> sport3 = new HashMap<String,Object>();
+		sport3.put("sport_id", Integer.valueOf(3));
+		sport3.put("sport_name", "Frobnicating");
+		sport3.put("discipline", "Fiddling");
+		
+		return sports;
+	}
 
 
     /////////////////////////////////////////
@@ -396,6 +418,5 @@ public class DatabaseBackend {
         conn = DriverManager.getConnection(connstring, dbUser, dbPass);
         return conn;
     }
-
     
 }
