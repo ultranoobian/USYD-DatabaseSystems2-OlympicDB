@@ -18,7 +18,7 @@ public class PlaceDetails extends Place {
     public PlaceDetails(int bayId, String site, String houseNum, String address, String city,
             double gps_long, double gps_lat
         ) {
-        super(bayId, site, houseNum, address, city);
+//        super(bayId, site, houseNum, address, city);
         gps_long_ = gps_long;
         gps_lat_ = gps_lat;
     }

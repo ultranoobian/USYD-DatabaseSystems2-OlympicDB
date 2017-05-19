@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import javax.swing.SwingUtilities;
 
-import usyd.it.olympics.data.Booking;
+import usyd.it.olympics.data.BookingDetails;
 import usyd.it.olympics.data.Place;
 import usyd.it.olympics.gui.GuiFrontEnd;
 
@@ -121,10 +121,10 @@ public class OlympicsDBClient {
         gui.showBayFinderScreen();
     }
     
-    public void getBayDetails(int bay) {
+    public void getBayDetails(HashMap<String, Object> hashMap) {
         setMessage("Retrieving details");
         try {
-        	HashMap<String, Object> details = db.getBayDetails(bay);
+        	HashMap<String, Object> details = db.getBayDetails(0);//hashMap);
             gui.getBayDetailsScreen().showBayDetails(details);
             gui.showBayDetailsScreen();
             setMessage("Details retrieved");
@@ -141,7 +141,7 @@ public class OlympicsDBClient {
         	if(bookingDetails==null) {
                 setMessage("Could not make booking");
         	} else {
-                gui.getReportScreen().show(Booking.getSummary(bookingDetails));
+                gui.getReportScreen().show(BookingDetails.getSummary(bookingDetails));
                 gui.showReportScreen();
                 setMessage("Submission complete");
         	}
@@ -150,26 +150,26 @@ public class OlympicsDBClient {
         }
     }
     
-    public void showFavouriteBay() {
-        setMessage("Retrieving bay details");
-        try {
-        	HashMap<String,Object> bay = db.getFavouriteBay();
-            if (bay == null)
-                setMessage("No bay details found");
-            else {    
-                gui.getBayDetailsScreen().showBayDetails(bay);
-                gui.showBayDetailsScreen();
-                setMessage("Bay details retrieved");
-            }
-        } catch (OlympicsDBException e) {
-            setMessage(e.getMessage());
-        }    
-    }
+//    public void showFavouriteBay() {
+//        setMessage("Retrieving bay details");
+//        try {
+//        	HashMap<String,Object> bay = db.getFavouriteBay();
+//            if (bay == null)
+//                setMessage("No bay details found");
+//            else {    
+//                gui.getBayDetailsScreen().showBayDetails(bay);
+//                gui.showBayDetailsScreen();
+//                setMessage("Bay details retrieved");
+//            }
+//        } catch (OlympicsDBException e) {
+//            setMessage(e.getMessage());
+//        }    
+//    }
 
     public void showHistory() {
         setMessage("Fetching booking history.");
         try {
-            ArrayList<HashMap<String,Object>> bookings = db.allBookings();
+            ArrayList<HashMap<String,Object>> bookings = db.allBookings(memberID);
             gui.getHistoryScreen().showBookings(bookings);
             gui.showHistoryScreen();
             setMessage("All bookings fetched.");
@@ -187,11 +187,11 @@ public class OlympicsDBClient {
 		setMessage("Details fetched."); 
     }
 
-    public void showBookingDetails(int journeyId) {
+    public void showBookingDetails(int journeyid) {
        setMessage("Getting booking details");
         try {
-        	HashMap<String,Object> bookingDetails = db.getBookingDetails(memberID, journeyId);
-            gui.getReportScreen().show(Booking.getSummary(bookingDetails));
+        	HashMap<String,Object> bookingDetails = db.getBookingDetails(memberID, journeyid);
+            gui.getReportScreen().show(BookingDetails.getSummary(bookingDetails));
             gui.showReportScreen();
             setMessage("Details fetched.");
         } catch (OlympicsDBException e) {

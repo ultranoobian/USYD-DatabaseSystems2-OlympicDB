@@ -215,11 +215,28 @@ public class DatabaseBackend {
         return details;
     }
     
-    ArrayList<HashMap<String,Object>> allBookings() throws OlympicsDBException {
+    ArrayList<HashMap<String,Object>> allBookings(String memberID) throws OlympicsDBException {
         ArrayList<HashMap<String,Object>> bookings = new ArrayList<HashMap<String,Object>>();
 
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
-        //bookings.add(new BayBookingListLine(73, "Mike the Speedy Potato", "Bay 5, 7A Ocean View, ", new Timestamp(111,03,11,13,00, 0, 0), new Timestamp(111,03,11,23,99, 0, 0)));
+        HashMap<String,Object> bookingex1 = new HashMap<String,Object>();
+        bookingex1.put("Vehicle", "XYZ124");
+        bookingex1.put("Origin", "SIT");
+        bookingex1.put("Destination", "Olympic Park");
+        bookingex1.put("Departs", new Date());
+        bookingex1.put("Arrives", new Date());
+        bookingex1.put("Booked by", "Kermit");
+        bookings.add(bookingex1);
+
+        HashMap<String,Object> bookingex2 = new HashMap<String,Object>();
+        bookingex2.put("Vehicle", "ABC789");
+        bookingex2.put("Origin", "Olympic Park");
+        bookingex2.put("Destination", "Sydney Airport");
+        bookingex2.put("Departs", new Date());
+        bookingex2.put("Arrives", new Date());
+        bookingex2.put("Booked by", "Gonzo");
+        bookings.add(bookingex2);
+        
         return bookings;
     }
                 

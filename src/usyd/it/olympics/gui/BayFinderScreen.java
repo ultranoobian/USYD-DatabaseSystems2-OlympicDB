@@ -22,7 +22,7 @@ import usyd.it.olympics.OlympicsDBClient;
 import usyd.it.olympics.data.Place;
 
 public class BayFinderScreen extends GuiScreen {
-    private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(Place.idName, Place.attributeNames, Place.attributeClasses);
+    private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(new Place());
     private final ListSelectionModel listSelection;
     private final JTextField txtAddress;
 
@@ -72,7 +72,7 @@ public class BayFinderScreen extends GuiScreen {
             public void actionPerformed(ActionEvent arg0) {
                 int selectionIndex = listSelection.getMinSelectionIndex();
                 if (selectionIndex >= 0) {
-                    client_.getBayDetails(list.getTupleId(selectionIndex));
+                    client_.getBayDetails(list.getTuple(selectionIndex));
                 }
             }
         });

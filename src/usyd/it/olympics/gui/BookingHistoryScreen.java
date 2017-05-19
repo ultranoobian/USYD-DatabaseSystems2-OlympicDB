@@ -19,10 +19,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import usyd.it.olympics.OlympicsDBClient;
-import usyd.it.olympics.data.BookingTuple;
+import usyd.it.olympics.data.Booking;
 
 public class BookingHistoryScreen extends GuiScreen {
-    private final HashMapTupleTabelModel bookingList = new HashMapTupleTabelModel(BookingTuple.idName, BookingTuple.columnNames, BookingTuple.columnClasses);
+    private final HashMapTupleTabelModel bookingList = new HashMapTupleTabelModel(
+    		new Booking(), 
+    		new String[] { "vehicle_code","origin", "dest", "departs","arrives"},
+    		new String[] { "Vehicle", "Origin","Destination","Departs","Arrives"});
     private final JButton btnGetDetails;
     private final ListSelectionModel baySelection;
 
@@ -48,7 +51,7 @@ public class BookingHistoryScreen extends GuiScreen {
             public void actionPerformed(ActionEvent arg0) {
                 int index = baySelection.getMinSelectionIndex();
                 if (index>=0)
-                    client_.showBookingDetails(bookingList.getTupleId(index));
+                    client_.showBookingDetails(Booking.getJourneyId(bookingList.getTuple(index)));
                 }
         }); 
         

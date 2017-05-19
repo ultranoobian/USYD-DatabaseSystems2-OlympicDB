@@ -40,16 +40,17 @@ public final class GuiFrontEnd {
     private final BayDetailsScreen bayDetailsScreen;
     private final ReportScreen generalReportScreen;
     private final BookingsCreationScreen bookingsCreationScreen;
+    private final BookingHistoryScreen historyScreen;
     
     // Navigation buttons
     private final JPanel navBar;
     private final HashMap<String, JButton> buttons = new HashMap<String, JButton>();
     private final String optHome;
-    private final String optFavourite;
-    private final String optBrowseBays;
-    private final String optHistory;
-    private final String optLogOut;
-    private final BookingHistoryScreen historyScreen;
+//    private final String optFavourite;
+    private final String optBrowseBays = "Browse Bays";
+    private final String optHistory = "Booking History";
+    private final String optLogOut = "Log Out";
+    
 
     public GuiFrontEnd(OlympicsDBClient root) {
         client = root;
@@ -75,15 +76,14 @@ public final class GuiFrontEnd {
             }
         });
 
-        optFavourite = "Favourite";
-        addMenuOption(optFavourite, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                client.showFavouriteBay();
-            }
-        });
+//        optFavourite = "Favourite";
+//        addMenuOption(optFavourite, new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent arg0) {
+//                client.showFavouriteBay();
+//            }
+//        });
         
-        optBrowseBays = "Browse Bays";
         addMenuOption(optBrowseBays, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -91,7 +91,6 @@ public final class GuiFrontEnd {
             }
         });
 
-        optHistory = "History";
         addMenuOption(optHistory,new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -99,7 +98,6 @@ public final class GuiFrontEnd {
             }
         });
 
-        optLogOut = "Log Out";
         addMenuOption(optLogOut, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -161,11 +159,11 @@ public final class GuiFrontEnd {
         setNavButton(optHome, false);
     }
 
-    public void showBayStatusScreen() {
-        screenSelect.show(mainPanel, "bayStatusScreen");
-        setNavButtons(true);
-        setNavButton(optFavourite, false);
-    }
+//    public void showBayStatusScreen() {
+//        screenSelect.show(mainPanel, "bayStatusScreen");
+//        setNavButtons(true);
+////        setNavButton(optFavourite, false);
+//    }
         
     public void showBayFinderScreen() {
         screenSelect.show(mainPanel, "bayFinderScreen");
