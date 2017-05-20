@@ -23,7 +23,7 @@ public class GeneralTupleConverter implements TupleConverter {
 	}
 	
 	public Integer getInt(String attribute, HashMap<String, Object> tuple) {
-		Object value =  tuple.get("sport_id");
+		Object value =  tuple.get(attribute);
 		return  ((value!=null && value instanceof Integer) ? (Integer) value : null);
 	}
 
