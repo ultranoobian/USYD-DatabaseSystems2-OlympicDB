@@ -28,7 +28,7 @@ public class BookingHistoryScreen extends GuiScreen {
 	protected final GeneralTupleConverter bookConv = new BookingDetails();
     private final HashMapTupleTabelModel bookingList = new HashMapTupleTabelModel(
     		bookConv, 
-    		new String[] { "vehicle_code","origin_name", "dest_name", "departs","arrives"},
+    		new String[] { "vehicle_code","origin_name", "dest_name", "when_departs","when_arrives"},
     		new String[] { "Vehicle", "Origin","Destination","Departs","Arrives"});
     private final JButton btnGetDetails;
     private final ListSelectionModel baySelection;

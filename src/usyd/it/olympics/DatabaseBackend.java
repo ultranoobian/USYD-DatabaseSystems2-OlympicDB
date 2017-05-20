@@ -252,26 +252,24 @@ public class DatabaseBackend {
     
     ArrayList<HashMap<String,Object>> allBookings(String memberID) throws OlympicsDBException {
         ArrayList<HashMap<String,Object>> bookings = new ArrayList<HashMap<String,Object>>();
-
+        
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
         HashMap<String,Object> bookingex1 = new HashMap<String,Object>();
         bookingex1.put("journey_id", Integer.valueOf(17));
         bookingex1.put("vehicle_code", "XYZ124");
         bookingex1.put("origin_name", "SIT");
         bookingex1.put("dest_name", "Olympic Park");
-        bookingex1.put("departs", new Date());
-        bookingex1.put("arrives", new Date());
-        bookingex1.put("booker_name", "Kermit");
+        bookingex1.put("when_departs", new Date());
+        bookingex1.put("when_arrives", new Date());
         bookings.add(bookingex1);
 
         HashMap<String,Object> bookingex2 = new HashMap<String,Object>();
-        bookingex1.put("journey_id", Integer.valueOf(25));
+        bookingex2.put("journey_id", Integer.valueOf(25));
         bookingex2.put("vehicle_code", "ABC789");
         bookingex2.put("origin_name", "Olympic Park");
         bookingex2.put("dest_name", "Sydney Airport");
-        bookingex2.put("departs", new Date());
-        bookingex2.put("arrives", new Date());
-        bookingex2.put("booker_name", "Gonzo");
+        bookingex2.put("when_departs", new Date());
+        bookingex2.put("when_arrives", new Date());
         bookings.add(bookingex2);
         
         return bookings;
@@ -299,9 +297,9 @@ public class DatabaseBackend {
     }
 
     /**
-     * Get details for a specific bay
+     * Get details for a specific journey
      * 
-     * @return Various details of hunt - see BayDetails.java
+     * @return Various details of journey - see JourneyDetails.java
      * @throws OlympicsDBException
      */
     public HashMap<String,Object> getJourneyDetails(int bay) throws OlympicsDBException {
@@ -318,13 +316,13 @@ public class DatabaseBackend {
         return details;
     }
     
-    HashMap<String, Object> getMemberHome(String member) throws OlympicsDBException {
-    	HashMap<String, Object> home = new HashMap<String, Object>();
-        
-        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION    
-        
-        return home;
-    }
+//    HashMap<String, Object> getMemberHome(String member) throws OlympicsDBException {
+//    	HashMap<String, Object> home = new HashMap<String, Object>();
+//        
+//        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION    
+//        
+//        return home;
+//    }
 
     public HashMap<String,Object> makeBooking(String byStaff, String forMember, Date departs) throws OlympicsDBException {
     	HashMap<String,Object> booking = null;
@@ -341,19 +339,22 @@ public class DatabaseBackend {
     	return booking;
     }
     
-    public HashMap<String,Object> getBookingDetails(String memberID, int journeyId) throws OlympicsDBException {
+    public HashMap<String,Object> getBookingDetails(String memberID, Integer journeyId) throws OlympicsDBException {
     	HashMap<String,Object> booking = null;
 
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
     	booking = new HashMap<String,Object>();
 
-        booking.put("vehicle", "TR870R");
-    	booking.put("start_day", "21/12/2020");
-    	booking.put("start_time", new Date());
-    	booking.put("to", "SIT");
-    	booking.put("from", "Wentworth");
-    	booking.put("booked_by", "Mike");
-    	booking.put("whenbooked", new Date());
+    	booking.put("journey_id", journeyId);
+        booking.put("vehicle_code", "TR870R");
+    	booking.put("when_departs", new Date());
+    	booking.put("dest_name", "SIT");
+    	booking.put("origin_name", "Wentworth");
+    	booking.put("bookedby_name", "Mrs Piggy");
+    	booking.put("bookedfor_name", "Mike");
+    	booking.put("when_booked", new Date());
+    	booking.put("when_arrives", new Date());
+    	
 
         return booking;
     }
