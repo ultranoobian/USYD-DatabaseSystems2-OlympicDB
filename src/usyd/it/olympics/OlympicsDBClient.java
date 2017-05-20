@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import usyd.it.olympics.data.BookingDetails;
@@ -102,10 +103,10 @@ public class OlympicsDBClient {
     //
     // Journey Finder
     //
-    public void showMatchingJourneys(String address) {
+    public void showMatchingJourneys(String origin, String dest, Date date) {
         setMessage("Fetching journey availabilities.");
         try {
-            ArrayList<HashMap<String, Object>> journeys = db.getMatchingJourneys(address);
+            ArrayList<HashMap<String, Object>> journeys = db.getDayJourneys(origin, dest, date);
             gui.getJourneyFinderScreen().showTuples(journeys);
             setMessage("All journeys fetched.");
         } catch (OlympicsDBException e) {
@@ -161,9 +162,9 @@ public class OlympicsDBClient {
         }    
     }
 
-    public void startBooking(Integer journeyId) {
+    public void startBooking(String vehicle, Date departs) {
         setMessage("Fetching details to start booking.");
-		gui.getBookingsCreationScreen().startBooking(journeyId, memberId);
+		gui.getBookingsCreationScreen().startBooking(vehicle, departs);
 		gui.showBookingsCreationScreen();
 		setMessage("Details fetched."); 
     }

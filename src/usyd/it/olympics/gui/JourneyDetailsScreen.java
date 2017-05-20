@@ -1,5 +1,6 @@
 package usyd.it.olympics.gui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
@@ -19,7 +20,7 @@ public class JourneyDetailsScreen extends GuiScreen {
 
     private final JTextArea description;
     private final JButton btnMakeBooking;
-    private Integer journey_id;
+	private HashMap<String, Object> journey;
     public JourneyDetailsScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BoxLayout(panel_, BoxLayout.Y_AXIS));
@@ -31,24 +32,27 @@ public class JourneyDetailsScreen extends GuiScreen {
         // Extra panel to include buttons
         // Include a button to allow a booking to be made for the current bay
         btnMakeBooking = new JButton("Make Booking");
+        btnMakeBooking.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel_.add(btnMakeBooking);
         btnMakeBooking.setEnabled(false);
         btnMakeBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                client_.startBooking(journey_id);
+                client_.startBooking((String) journey.get("vehicle_code"), (Date) journey.get("when_departs"));
             }
         });   
     }
 
-    public void showJourneyDetails(HashMap<String, Object> journey) {
-        journey_id = (Integer) journey.get("journey_id");
+    public void showJourneyDetails(HashMap<String, Object> tuple) {
+        journey = tuple;
         btnMakeBooking.setEnabled(true);
         
-        String s = "Vehicle: " + journey.get("vehicle_code")
-                + "\nLeaves " + journey.get("from_name") + " at " + (Date) journey.get("depart_time")
-                + "\nand travels to " + journey.get("to_name")
+        String s = "Vehicle: " + journey.get("vehicle_code") + " has " + (Integer) journey.get("capacity") + " seats"
+                + "\nLeaves " + journey.get("origin_name") + " at " + (Date) journey.get("when_departs")
+                + "\nand travels to " + journey.get("dest_name") + " for " + (Date) journey.get("when_arrives")
                 + "\nCurrently there are  " + (Integer) journey.get("nbooked") + " bookings for this journey";
+
+        
         description.setText(s);
     }
 }

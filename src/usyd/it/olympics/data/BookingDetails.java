@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class BookingDetails extends GeneralTupleConverter {
 	private static String[] attribs =  { "journey_id", "vehicle_code", 	"origin_name", 		"dest_name", 	"when_departs", 	"when_arrives", 	"booker_name", "bookedfor_name", "when_booked"};
-	private static Class[]  classes = { Integer.class, String.class, 	String.class, 	String.class, 	Date.class, Date.class, String.class, String.class, Date.class};
+	private static Class<?>[]  classes = { Integer.class, String.class, 	String.class, 	String.class, 	Date.class, Date.class, String.class, String.class, Date.class};
 	
 	public BookingDetails() {
 		super(attribs, classes);

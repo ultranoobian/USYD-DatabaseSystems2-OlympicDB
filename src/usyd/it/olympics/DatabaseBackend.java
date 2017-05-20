@@ -195,54 +195,27 @@ public class DatabaseBackend {
     ///////   Journeys    ////////
 
     /**
-     * Array list of journeys from one place to another
-     * @param fromPlace the origin, starting place.
-     * @param toPlace the destination, place to go to.
-     * @return a list of all journeys from the origin to destination
-     */
-    ArrayList<HashMap<String, Object>> allJourneys(String fromPlace, String toPlace){
-        // FIXME: Replace the following with REAL OPERATIONS!
-        ArrayList<HashMap<String, Object>> journeys = new ArrayList<>();
-
-        //journeys.add(new OlympicJourney("TR870R", new Date(), "SIT", "Wentworth", 4, 7).asHashMap());
-
-        return journeys;
-    }
-
-    /**
      * Array list of journeys from one place to another on a given date
      * @param journeyDate the date of the journey
      * @param fromPlace the origin, starting place.
      * @param toPlace the destination, place to go to.
      * @return a list of all journeys from the origin to destination
      */
-    ArrayList<HashMap<String, Object>> getDayJourneys(String fromPlace, String toPlace, Date journeyDate){
+    ArrayList<HashMap<String, Object>> getDayJourneys(String fromPlace, String toPlace, Date journeyDate) throws OlympicsDBException {
         // FIXME: Replace the following with REAL OPERATIONS!
         ArrayList<HashMap<String, Object>> journeys = new ArrayList<>();
 
-        //journeys.add(new OlympicJourney("TR870R", journeyDate, "SIT", "Wentworth", 4, 7).asHashMap());
-
-        return journeys;
-    }
-
-
-    /**
-     * Get status of user in their current hunt
-     * @return Details of hunt
-     * @throws OlympicsDBException
-     */
-    HashMap<String,Object> getFavouriteBay() throws OlympicsDBException {
+        HashMap<String,Object> journey1 = new HashMap<String,Object>();
+        journey1.put("journey_id", Integer.valueOf(17));
+        journey1.put("vehicle_code", "XYZ124");
+        journey1.put("origin_name", "SIT");
+        journey1.put("dest_name", "Olympic Park");
+        journey1.put("when_departs", new Date());
+        journey1.put("when_arrives", new Date());
+        journey1.put("available_seats", Integer.valueOf(3));
+        journeys.add(journey1);
         
-        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
-        // See the constructor in BayStatus.java
-    	HashMap<String,Object> details =  new HashMap<String,Object>();
-//        		(92, "Left of driveway", 
-//                "62" , "Bourne Drive, Ludlum", "Scarlatti",
-//                12543.233, 12787.34665, 
-//                3, 4, 6,
-//                9, 5, 10, 4, 
-//                new int[]{10, 11, 2, 3});
-        return details;
+        return journeys;
     }
     
     ArrayList<HashMap<String,Object>> allBookings(String memberID) throws OlympicsDBException {
@@ -271,27 +244,6 @@ public class DatabaseBackend {
     }
                 
     /**
-     * Obtain a list of all available bays
-     *
-     * Implements Core Functionality (e) 
-     * 
-     * @return list of bays
-     * @throws OlympicsDBException
-     */
-    public ArrayList<HashMap<String,Object>> getMatchingJourneys(String address) throws OlympicsDBException {
-        ArrayList<HashMap<String,Object>> bays = new ArrayList<HashMap<String,Object>>();
-
-        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
-        // BayListLineDetails is a simple container class to hold the required attributes of an individual hunt
-        // create one as "new BayListLineDetails(name, start, capacity, available)"
-//        bays.add(new BayListLineDetails(42, "Lot 3", "7", "Acacia Crescent, Foggy Bottom", "Newcastle"));
-//        bays.add(new BayListLineDetails(12, "Space 43", "14B", "Threepwood Avenue, Guybrushbury", "Monkey Island"));
-//        bays.add(new BayListLineDetails(98, "Only bay", "11/12", "LeChuck Heights, Melee Heights", "Monkey Island"));
-
-        return bays;
-    }
-
-    /**
      * Get details for a specific journey
      * 
      * @return Various details of journey - see JourneyDetails.java
@@ -301,24 +253,19 @@ public class DatabaseBackend {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
         // See the constructor in BayDetails.java
     	HashMap<String,Object> details = new HashMap<String,Object>();
-//        (42, 
-//                "Lot 5", 
-//                "7", "Acacia Avenue, Foggy Bottom", "Newcastle",
-//                123.456, 874.3455,
-//                3, 2.5, 5,
-//                10, 4, 0, 0,
-//                new int[]{});
+
+    	details.put("journey_id", Integer.valueOf(17));
+    	details.put("vehicle_code", "XYZ124");
+        details.put("origin_name", "SIT");
+        details.put("dest_name", "Olympic Park");
+        details.put("when_departs", new Date());
+        details.put("when_arrives", new Date());
+        details.put("capacity", Integer.valueOf(6));
+        details.put("nbooked", Integer.valueOf(3));
+    	
         return details;
     }
     
-//    HashMap<String, Object> getMemberHome(String member) throws OlympicsDBException {
-//    	HashMap<String, Object> home = new HashMap<String, Object>();
-//        
-//        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION    
-//        
-//        return home;
-//    }
-
     public HashMap<String,Object> makeBooking(String byStaff, String forMember, Date departs) throws OlympicsDBException {
     	HashMap<String,Object> booking = null;
     	

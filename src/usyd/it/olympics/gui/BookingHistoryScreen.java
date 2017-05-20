@@ -1,12 +1,11 @@
 package usyd.it.olympics.gui;
+import java.awt.Component;
 /**
  * Bookings Screen: Display Booking information
  * Author Bryn Jeffries
  */
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,9 +15,9 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import usyd.it.olympics.OlympicsDBClient;
 import usyd.it.olympics.data.BookingDetails;
@@ -49,6 +48,7 @@ public class BookingHistoryScreen extends GuiScreen {
         
         // Include a button to allow a booking to be made for the current bay
         btnGetDetails = new JButton("Get Details");
+        btnGetDetails.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel_.add(btnGetDetails);
         btnGetDetails.setEnabled(false);
         btnGetDetails.addActionListener(new ActionListener() {
@@ -76,20 +76,6 @@ public class BookingHistoryScreen extends GuiScreen {
             } else {
                     bookingList.update(bookings);
             }
-    }
-
-    /// Display date and time in JTable
-    static class DateTimeRenderer extends DefaultTableCellRenderer {
-        DateFormat formatter;
-        public DateTimeRenderer() { super(); }
-
-        @Override
-        public void setValue(Object value) {
-            if (formatter==null) {
-                formatter = new SimpleDateFormat("dd-MMM-yyyy h:mm a");
-            }
-            setText((value == null) ? "" : formatter.format(value));
-        }
     }
 	
 }
