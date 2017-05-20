@@ -92,7 +92,7 @@ public class DatabaseBackend {
      * @return text to be displayed in the home screen
      * @throws OlympicsDBException
      */
-    public HashMap<String, Object> memberDetails(String memberID) throws OlympicsDBException {
+    public HashMap<String, Object> getMemberDetails(String memberID) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
     	HashMap<String, Object> details = new HashMap<String, Object>();
     	//details.put(arg0, arg1)= "Hello Mr Joe Bloggs";
@@ -126,7 +126,7 @@ public class DatabaseBackend {
      * @return List of the events for that sport
      * @throws OlympicsDBException
      */
-    ArrayList<HashMap<String, Object>> allEventsSport(Integer sportname) throws OlympicsDBException {
+    ArrayList<HashMap<String, Object>> getEventsOfSport(Integer sportname) throws OlympicsDBException {
         // FIXME: Replace the following with REAL OPERATIONS!
 
         ArrayList<HashMap<String, Object>> events = new ArrayList<>();
@@ -158,7 +158,7 @@ public class DatabaseBackend {
      * @return a hashmap for each result in the event.
      * @throws OlympicsDBException
      */
-    ArrayList<HashMap<String, Object>> eventResults(Integer eventId) throws OlympicsDBException {
+    ArrayList<HashMap<String, Object>> getResultsOfEvent(Integer eventId) throws OlympicsDBException {
         // FIXME: Replace the following with REAL OPERATIONS!
 
     	ArrayList<HashMap<String, Object>> results = new ArrayList<>();
@@ -201,7 +201,7 @@ public class DatabaseBackend {
      * @param toPlace the destination, place to go to.
      * @return a list of all journeys from the origin to destination
      */
-    ArrayList<HashMap<String, Object>> getDayJourneys(String fromPlace, String toPlace, Date journeyDate) throws OlympicsDBException {
+    ArrayList<HashMap<String, Object>> findJourneys(String fromPlace, String toPlace, Date journeyDate) throws OlympicsDBException {
         // FIXME: Replace the following with REAL OPERATIONS!
         ArrayList<HashMap<String, Object>> journeys = new ArrayList<>();
 
@@ -218,7 +218,7 @@ public class DatabaseBackend {
         return journeys;
     }
     
-    ArrayList<HashMap<String,Object>> allBookings(String memberID) throws OlympicsDBException {
+    ArrayList<HashMap<String,Object>> getMemberBookings(String memberID) throws OlympicsDBException {
         ArrayList<HashMap<String,Object>> bookings = new ArrayList<HashMap<String,Object>>();
         
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED

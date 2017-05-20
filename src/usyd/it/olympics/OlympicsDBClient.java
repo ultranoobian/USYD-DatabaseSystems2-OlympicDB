@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import usyd.it.olympics.data.BookingDetails;
@@ -49,7 +48,7 @@ public class OlympicsDBClient {
             	memberId = memUser;
             	memberType = (String) basicDetails.get("member_type"); // Could use for type-specific functionality
             	setMessage("Verified login, Fetching member details");
-            	HashMap<String, Object> fullDetails = db.memberDetails(memberId);
+            	HashMap<String, Object> fullDetails = db.getMemberDetails(memberId);
             	gui.getMainMenuScreen().showMemberDetails(fullDetails);
             	gui.showMainMenuScreen();
             	setMessage("Login successful.");
@@ -74,7 +73,7 @@ public class OlympicsDBClient {
     public void showMemberDetails() {
         setMessage("Fetching member details.");
         try {
-            HashMap<String, Object> member = db.memberDetails(memberId);
+            HashMap<String, Object> member = db.getMemberDetails(memberId);
             gui.getMainMenuScreen().showMemberDetails(member);
             gui.showMainMenuScreen();
             setMessage("Details fetched.");
@@ -106,7 +105,7 @@ public class OlympicsDBClient {
     public void showMatchingJourneys(String origin, String dest, Date date) {
         setMessage("Fetching journey availabilities.");
         try {
-            ArrayList<HashMap<String, Object>> journeys = db.getDayJourneys(origin, dest, date);
+            ArrayList<HashMap<String, Object>> journeys = db.findJourneys(origin, dest, date);
             gui.getJourneyFinderScreen().showTuples(journeys);
             setMessage("All journeys fetched.");
         } catch (OlympicsDBException e) {
@@ -153,7 +152,7 @@ public class OlympicsDBClient {
     public void showHistory() {
         setMessage("Fetching booking history.");
         try {
-            ArrayList<HashMap<String,Object>> bookings = db.allBookings(memberId);
+            ArrayList<HashMap<String,Object>> bookings = db.getMemberBookings(memberId);
             gui.getHistoryScreen().showBookings(bookings);
             gui.showHistoryScreen();
             setMessage("All bookings fetched.");
@@ -196,7 +195,7 @@ public class OlympicsDBClient {
 	public void getEventResults(Integer eventid) {
 	       setMessage("Getting event results");
 	        try {
-	        	ArrayList<HashMap<String, Object>> eventDetails = db.eventResults(eventid);
+	        	ArrayList<HashMap<String, Object>> eventDetails = db.getResultsOfEvent(eventid);
 	            gui.getEventResultsScreen().setTuples(eventDetails);
 	            gui.showEventResultsScreen();
 	            setMessage("Results fetched.");
@@ -209,7 +208,7 @@ public class OlympicsDBClient {
 	public void getEvents(Integer sportId) {
         setMessage("Retrieving events");
         try {
-        	ArrayList<HashMap<String, Object>> events = db.allEventsSport(sportId);
+        	ArrayList<HashMap<String, Object>> events = db.getEventsOfSport(sportId);
             gui.getEventBrowserScreen().showTuples(events);
             gui.showEventBrowserScreen();
             setMessage("Details retrieved");
