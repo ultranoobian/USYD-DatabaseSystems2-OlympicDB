@@ -183,7 +183,8 @@ public final class GuiFrontEnd {
     }
     
     public void showEventBrowserScreen() {
-    	// FIXME: Implement
+    	screenSelect.show(mainPanel, "eventBrowserScreen");
+        setNavButtons(true);
     }
     
     

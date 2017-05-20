@@ -1,5 +1,7 @@
 package usyd.it.olympics.gui;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -8,26 +10,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import usyd.it.olympics.OlympicsDBClient;
 import usyd.it.olympics.data.Place;
+import usyd.it.olympics.data.Sport;
 
 /*
  * Derived from JourneyFinderScreen
  */
 public class EventBrowserScreen extends GuiScreen {
-    private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(new Place());
+	private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(new Place());
     private final ListSelectionModel listSelection;
-    private final JTextField txtAddress;
+    private final JComboBox<HashMap<String, Object>> sportChooser;
 
     public EventBrowserScreen(OlympicsDBClient r) {
         super(r);
@@ -38,17 +47,16 @@ public class EventBrowserScreen extends GuiScreen {
         panel_.add(choicePanel);
         choicePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-        JLabel lblAddress = new JLabel("Address");
-        choicePanel.add(lblAddress);
-        txtAddress = new JTextField();
-        txtAddress.setText("address");
-        choicePanel.add(txtAddress);
-        txtAddress.setColumns(20);
+        JLabel lblSport = new JLabel("Sport");
+        choicePanel.add(lblSport);
+        sportChooser = new JComboBox<HashMap<String, Object>>();
+        sportChooser.setRenderer(new EventTupleRenderer());
+        choicePanel.add(sportChooser);
         
         JButton btnUpdate = new JButton("Search");
         btnUpdate.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent arg0) {
-                        client_.showMatchingJourneys(txtAddress.getText());
+                        client_.getEvents(Sport.getSportId((HashMap<String, Object>) sportChooser.getSelectedItem()));
                 }
         });
         choicePanel.add(btnUpdate);
@@ -97,8 +105,59 @@ public class EventBrowserScreen extends GuiScreen {
         list.update(newTuples);
     }
 
+	@SuppressWarnings("unchecked")
 	public void setSports(ArrayList<HashMap<String, Object>> sports) {
-		// TODO Auto-generated method stub
-		
+		sportChooser.setModel(new DefaultComboBoxModel<HashMap<String, Object>>(sports.toArray(new HashMap[sports.size()])));
 	}
+	
+    private class EventTupleRenderer extends JLabel implements ListCellRenderer<HashMap<String, Object>> {
+
+    	// Borrowed from http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/6-b14/javax/swing/DefaultListCellRenderer.java
+    	private Border getNoFocusBorder() {
+    		if (System.getSecurityManager() != null) {
+    			return new EmptyBorder(1, 1, 1, 1);
+    		} else {
+    			return UIManager.getBorder("List.noFocusBorder");
+    		}
+    	}
+
+		@Override
+		public Component getListCellRendererComponent(JList<? extends HashMap<String, Object>> list,
+				HashMap<String, Object> value, int index, boolean isSelected, boolean cellHasFocus) {
+			Color bg = null;
+			Color fg = null;
+			if (isSelected) {
+			    setBackground(bg == null ? list.getSelectionBackground() : bg);
+			    setForeground(fg == null ? list.getSelectionForeground() : fg);
+			} else {
+			    setBackground(list.getBackground());
+			    setForeground(list.getForeground());
+			}
+			
+			if (value!=null) {
+				this.setText(Sport.getSportName(value) + " - " + Sport.getDiscipline(value));
+			}
+			
+			setEnabled(list.isEnabled());
+			setFont(list.getFont());
+			
+			Border border = null;
+			if (cellHasFocus) {
+			    if (isSelected) {
+			        border = UIManager.getBorder("List.focusSelectedCellHighlightBorder");
+			    }
+
+			    if (border == null) {
+			        border = UIManager.getBorder("List.focusCellHighlightBorder");
+			    }
+			} else {
+			    border = getNoFocusBorder();
+			}
+			setBorder(border);
+			
+			return this;
+		}
+
+	}
+	
 }

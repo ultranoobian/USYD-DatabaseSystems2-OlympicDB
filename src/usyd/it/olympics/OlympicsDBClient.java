@@ -182,11 +182,6 @@ public class OlympicsDBClient {
         }
     }
 
-	public void getEventResults(HashMap<String, Object> tuple) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void showEventBrowser() {
        setMessage("Getting sports");
         try {
@@ -197,6 +192,17 @@ public class OlympicsDBClient {
         } catch (OlympicsDBException e) {
             setMessage(e.getMessage());
         }
+	}
+	
+	public void getEventResults(HashMap<String, Object> tuple) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void getEvents(Integer sportId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

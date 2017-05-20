@@ -329,16 +329,19 @@ public class DatabaseBackend {
 		sport1.put("sport_id", Integer.valueOf(1));
 		sport1.put("sport_name", "Chillaxing");
 		sport1.put("discipline", "Couch Potatoing");
+		sports.add(sport1);
 		
 		HashMap<String,Object> sport2 = new HashMap<String,Object>();
 		sport2.put("sport_id", Integer.valueOf(2));
 		sport2.put("sport_name", "Frobnicating");
 		sport2.put("discipline", "Tweaking");
+		sports.add(sport2);
 		
 		HashMap<String,Object> sport3 = new HashMap<String,Object>();
 		sport3.put("sport_id", Integer.valueOf(3));
 		sport3.put("sport_name", "Frobnicating");
 		sport3.put("discipline", "Fiddling");
+		sports.add(sport3);
 		
 		return sports;
 	}
