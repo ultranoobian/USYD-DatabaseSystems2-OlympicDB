@@ -255,21 +255,23 @@ public class DatabaseBackend {
 
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
         HashMap<String,Object> bookingex1 = new HashMap<String,Object>();
-        bookingex1.put("Vehicle", "XYZ124");
-        bookingex1.put("Origin", "SIT");
-        bookingex1.put("Destination", "Olympic Park");
-        bookingex1.put("Departs", new Date());
-        bookingex1.put("Arrives", new Date());
-        bookingex1.put("Booked by", "Kermit");
+        bookingex1.put("journey_id", Integer.valueOf(17));
+        bookingex1.put("vehicle_code", "XYZ124");
+        bookingex1.put("origin_name", "SIT");
+        bookingex1.put("dest_name", "Olympic Park");
+        bookingex1.put("departs", new Date());
+        bookingex1.put("arrives", new Date());
+        bookingex1.put("booker_name", "Kermit");
         bookings.add(bookingex1);
 
         HashMap<String,Object> bookingex2 = new HashMap<String,Object>();
-        bookingex2.put("Vehicle", "ABC789");
-        bookingex2.put("Origin", "Olympic Park");
-        bookingex2.put("Destination", "Sydney Airport");
-        bookingex2.put("Departs", new Date());
-        bookingex2.put("Arrives", new Date());
-        bookingex2.put("Booked by", "Gonzo");
+        bookingex1.put("journey_id", Integer.valueOf(25));
+        bookingex2.put("vehicle_code", "ABC789");
+        bookingex2.put("origin_name", "Olympic Park");
+        bookingex2.put("dest_name", "Sydney Airport");
+        bookingex2.put("departs", new Date());
+        bookingex2.put("arrives", new Date());
+        bookingex2.put("booker_name", "Gonzo");
         bookings.add(bookingex2);
         
         return bookings;

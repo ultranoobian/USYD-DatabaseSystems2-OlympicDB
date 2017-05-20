@@ -21,16 +21,14 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import usyd.it.olympics.OlympicsDBClient;
+import usyd.it.olympics.data.BookingDetails;
 import usyd.it.olympics.data.GeneralTupleConverter;
 
 public class BookingHistoryScreen extends GuiScreen {
-	protected final GeneralTupleConverter bookConv = new GeneralTupleConverter(
-			new String[] { "journey_id", "vehicle_code", 	"origin", 		"dest", 	"departs", 	"arrives", 	"booked_by"},
-			new Class[] { Integer.class, String.class, 	String.class, 	String.class, 	Date.class, Date.class, String.class}
-			);
+	protected final GeneralTupleConverter bookConv = new BookingDetails();
     private final HashMapTupleTabelModel bookingList = new HashMapTupleTabelModel(
     		bookConv, 
-    		new String[] { "vehicle_code","origin", "dest", "departs","arrives"},
+    		new String[] { "vehicle_code","origin_name", "dest_name", "departs","arrives"},
     		new String[] { "Vehicle", "Origin","Destination","Departs","Arrives"});
     private final JButton btnGetDetails;
     private final ListSelectionModel baySelection;
