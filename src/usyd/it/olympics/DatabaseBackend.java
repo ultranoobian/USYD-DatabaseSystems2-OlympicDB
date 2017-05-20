@@ -95,10 +95,27 @@ public class DatabaseBackend {
      * @return text to be displayed in the home screen
      * @throws OlympicsDBException
      */
-    public HashMap<String, Object> memberDetails(String memberID, String member_type) throws OlympicsDBException {
+    public HashMap<String, Object> memberDetails(String memberID) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
     	HashMap<String, Object> details = new HashMap<String, Object>();
     	//details.put(arg0, arg1)= "Hello Mr Joe Bloggs";
+    	
+    	details.put("member_id", memberID);
+    	details.put("member_type", "athlete");
+    	details.put("title", "Mr");
+    	details.put("first_name", "Potato");
+    	details.put("family_name", "Head");
+    	details.put("country_name", "Australia");
+    	details.put("residence", "SIT");
+    	details.put("member_type", "athlete");
+    	details.put("num_bookings", Integer.valueOf(20));
+    	
+    	// Some attributes fetched may depend upon member_type
+    	// This is for an athlete
+    	details.put("num_gold", Integer.valueOf(5));
+    	details.put("num_silver", Integer.valueOf(4));
+    	details.put("num_bronze", Integer.valueOf(1));
+        
         return details;
     }
 

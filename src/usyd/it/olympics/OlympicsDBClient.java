@@ -47,9 +47,9 @@ public class OlympicsDBClient {
         	HashMap<String, Object> basicDetails = db.checkLogin(memUser, memPass);
             if(basicDetails!=null) {
             	memberId = memUser;
-            	memberType = (String) basicDetails.get("member_type");
+            	memberType = (String) basicDetails.get("member_type"); // Could use for type-specific functionality
             	setMessage("Verified login, Fetching member details");
-            	HashMap<String, Object> fullDetails = db.memberDetails(memberId, memberType);
+            	HashMap<String, Object> fullDetails = db.memberDetails(memberId);
             	gui.getMainMenuScreen().showMemberDetails(fullDetails);
             	gui.showMainMenuScreen();
             	setMessage("Login successful.");
@@ -74,7 +74,7 @@ public class OlympicsDBClient {
     public void showMemberDetails() {
         setMessage("Fetching member details.");
         try {
-            HashMap<String, Object> member = db.memberDetails(memberId, memberType);
+            HashMap<String, Object> member = db.memberDetails(memberId);
             gui.getMainMenuScreen().showMemberDetails(member);
             gui.showMainMenuScreen();
             setMessage("Details fetched.");
