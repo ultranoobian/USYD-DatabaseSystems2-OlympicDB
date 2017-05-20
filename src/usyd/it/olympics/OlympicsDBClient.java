@@ -8,6 +8,7 @@ import java.util.HashMap;
 import javax.swing.SwingUtilities;
 
 import usyd.it.olympics.data.BookingDetails;
+import usyd.it.olympics.data.EventDetails;
 import usyd.it.olympics.gui.GuiFrontEnd;
 
 public class OlympicsDBClient {
@@ -120,10 +121,10 @@ public class OlympicsDBClient {
         gui.showJourneyFinderScreen();
     }
     
-    public void getJourneyDetails(HashMap<String, Object> hashMap) {
+    public void getJourneyDetails(Integer journeyId) {
         setMessage("Retrieving details");
         try {
-        	HashMap<String, Object> details = db.getJourneyDetails(0);//hashMap);
+        	HashMap<String, Object> details = db.getJourneyDetails(journeyId);
             gui.getJourneyDetailsScreen().showJourneyDetails(details);
             gui.showJourneyDetailsScreen();
             setMessage("Details retrieved");
@@ -161,16 +162,14 @@ public class OlympicsDBClient {
         }    
     }
 
-    public void startBooking(int journeyId) {
+    public void startBooking(Integer journeyId) {
         setMessage("Fetching details to start booking.");
-        //HashMap<String, Object> place = db.getMemberHome(memberID);
-		//Integer placeid = Place.getPlaceId(place);
 		gui.getBookingsCreationScreen().startBooking(journeyId, memberId);
 		gui.showBookingsCreationScreen();
 		setMessage("Details fetched."); 
     }
 
-    public void showBookingDetails(int journeyid) {
+    public void showBookingDetails(Integer journeyid) {
        setMessage("Getting booking details");
         try {
         	HashMap<String,Object> bookingDetails = db.getBookingDetails(memberId, journeyid);
@@ -194,15 +193,29 @@ public class OlympicsDBClient {
         }
 	}
 	
-	public void getEventResults(HashMap<String, Object> tuple) {
-		// TODO Auto-generated method stub
-		
+	public void getEventResults(Integer eventid) {
+	       setMessage("Getting Event details");
+	        try {
+	        	HashMap<String,Object> eventDetails = db.eventDetails(eventid);
+	            gui.getReportScreen().show(EventDetails.getSummary(eventDetails));
+	            gui.showReportScreen();
+	            setMessage("Details fetched.");
+	        } catch (OlympicsDBException e) {
+	            setMessage(e.getMessage());
+	        }
 	}
 
 
 	public void getEvents(Integer sportId) {
-		// TODO Auto-generated method stub
-		
+        setMessage("Retrieving events");
+        try {
+        	ArrayList<HashMap<String, Object>> events = db.allEventsSport(sportId);
+            gui.getEventBrowserScreen().showTuples(events);
+            gui.showEventBrowserScreen();
+            setMessage("Details retrieved");
+        } catch (OlympicsDBException e) {
+            setMessage(e.getMessage());
+        }
 	}
 
 

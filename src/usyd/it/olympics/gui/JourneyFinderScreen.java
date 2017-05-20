@@ -19,10 +19,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import usyd.it.olympics.OlympicsDBClient;
-import usyd.it.olympics.data.Place;
+import usyd.it.olympics.data.GeneralTupleConverter;
 
 public class JourneyFinderScreen extends GuiScreen {
-    private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(new Place());
+	protected final GeneralTupleConverter placeConv = new GeneralTupleConverter(
+		new String[] {"place_name", "address"},
+		new Class<?>[] {String.class, String.class});
+    private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(placeConv);
     private final ListSelectionModel listSelection;
     private final JTextField txtAddress;
 
@@ -72,7 +75,7 @@ public class JourneyFinderScreen extends GuiScreen {
             public void actionPerformed(ActionEvent arg0) {
                 int selectionIndex = listSelection.getMinSelectionIndex();
                 if (selectionIndex >= 0) {
-                    client_.getJourneyDetails(list.getTuple(selectionIndex));
+                    client_.getJourneyDetails(placeConv.getInt("journey_id",list.getTuple(selectionIndex)));
                 }
             }
         });

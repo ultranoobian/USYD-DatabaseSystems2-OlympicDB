@@ -7,9 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.ArrayList;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -18,17 +19,22 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+
 import usyd.it.olympics.OlympicsDBClient;
-import usyd.it.olympics.OlympicsDBException;
-import usyd.it.olympics.data.Booking;
+import usyd.it.olympics.data.GeneralTupleConverter;
 
 public class BookingHistoryScreen extends GuiScreen {
+	protected final GeneralTupleConverter bookConv = new GeneralTupleConverter(
+			new String[] { "journey_id", "vehicle_code", 	"origin", 		"dest", 	"departs", 	"arrives", 	"booked_by"},
+			new Class[] { Integer.class, String.class, 	String.class, 	String.class, 	Date.class, Date.class, String.class}
+			);
     private final HashMapTupleTabelModel bookingList = new HashMapTupleTabelModel(
-    		new Booking(), 
+    		bookConv, 
     		new String[] { "vehicle_code","origin", "dest", "departs","arrives"},
     		new String[] { "Vehicle", "Origin","Destination","Departs","Arrives"});
     private final JButton btnGetDetails;
     private final ListSelectionModel baySelection;
+	
 
     public BookingHistoryScreen(OlympicsDBClient r) {
         super(r);
@@ -52,11 +58,7 @@ public class BookingHistoryScreen extends GuiScreen {
             public void actionPerformed(ActionEvent arg0) {
                 int index = baySelection.getMinSelectionIndex();
                 if (index>=0)
-					try {
-						client_.showBookingDetails(Booking.getJourneyId(bookingList.getTuple(index)));
-					} catch (OlympicsDBException e) {
-						// Shouldn't happen, so just swallow it
-					}
+						client_.showBookingDetails(bookConv.getInt("journey_id", bookingList.getTuple(index)));
                 }
         }); 
         

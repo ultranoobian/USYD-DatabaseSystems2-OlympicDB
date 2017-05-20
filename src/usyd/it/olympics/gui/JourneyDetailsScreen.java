@@ -2,13 +2,14 @@ package usyd.it.olympics.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
+
 import usyd.it.olympics.OlympicsDBClient;
-import usyd.it.olympics.data.PlaceDetails;
 
 /**
  * Very simple details screen, cloned from HomeScreen
@@ -18,7 +19,7 @@ public class JourneyDetailsScreen extends GuiScreen {
 
     private final JTextArea description;
     private final JButton btnMakeBooking;
-    private Integer bayId;
+    private Integer journey_id;
     public JourneyDetailsScreen(OlympicsDBClient r) {
         super(r);
         panel_.setLayout(new BoxLayout(panel_, BoxLayout.Y_AXIS));
@@ -35,29 +36,19 @@ public class JourneyDetailsScreen extends GuiScreen {
         btnMakeBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                client_.startBooking(bayId);
+                client_.startBooking(journey_id);
             }
         });   
     }
 
-    public void showJourneyDetails(HashMap<String, Object> bay) {
-        bayId = (Integer) bay.get(PlaceDetails.BAYID);
+    public void showJourneyDetails(HashMap<String, Object> journey) {
+        journey_id = (Integer) journey.get("journey_id");
         btnMakeBooking.setEnabled(true);
-        String s = "Name: " + bay.get(PlaceDetails.SITE)
-                + "\nAddress: " + bay.get(PlaceDetails.HOUSENUM) + " " + bay.get(PlaceDetails.STREET)
-                + ", " + bay.get(PlaceDetails.CITY)
-                + "\nGPS co-ords: (" + bay.get(PlaceDetails.GPSLONG) + "," + bay.get(PlaceDetails.GPSLAT) + ")";
-
-//        int[] hours = (int[]) bay.get(BayDetails.TODAYHOURS);
-//        if (hours.length<1) {
-//            s = s.concat("\nThere is no availability today");
-//        } else {
-//            String hrsText = "\nBay is available at the following hours";
-//            for(int hour : hours) {
-//                hrsText = hrsText.concat("\n" + hour + ":00");
-//            }
-//            s= s.concat(hrsText);
-//        }
+        
+        String s = "Vehicle: " + journey.get("vehicle_code")
+                + "\nLeaves " + journey.get("from_name") + " at " + (Date) journey.get("depart_time")
+                + "\nand travels to " + journey.get("to_name")
+                + "\nCurrently there are  " + (Integer) journey.get("nbooked") + " bookings for this journey";
         description.setText(s);
     }
 }

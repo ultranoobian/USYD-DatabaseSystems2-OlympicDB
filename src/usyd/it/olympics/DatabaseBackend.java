@@ -121,15 +121,33 @@ public class DatabaseBackend {
     /**
      * Get all of the events listed in the olympics for a given sport
      *
-     * @param sportname the name of the sport we are filtering by
+     * @param sportname the ID of the sport we are filtering by
      * @return List of the events for that sport
      * @throws OlympicsDBException
      */
-    ArrayList<HashMap<String, Object>> allEventsSport(String sportname) throws OlympicsDBException {
+    ArrayList<HashMap<String, Object>> allEventsSport(Integer sportname) throws OlympicsDBException {
         // FIXME: Replace the following with REAL OPERATIONS!
 
         ArrayList<HashMap<String, Object>> events = new ArrayList<>();
-//        events.add(new OlympicEntity("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
+        
+        HashMap<String,Object> event1 = new HashMap<String,Object>();
+        event1.put("event_id", Integer.valueOf(123));
+        event1.put("sport_id", Integer.valueOf(3));
+        event1.put("event_name", "Women's 5km Egg & Spoon");
+        event1.put("event_gender", "W");
+        event1.put("sport_venue", "ANZ Stadium");
+        event1.put("event_start", new Date());
+        events.add(event1);
+        
+        HashMap<String,Object> event2 = new HashMap<String,Object>();
+        event2.put("event_id", Integer.valueOf(123));
+        event2.put("sport_id", Integer.valueOf(3));
+        event2.put("event_name", "Men's 40km Cross-country Hopping");
+        event2.put("event_gender", "M");
+        event2.put("sport_venue", "Bennelong Point");
+        event2.put("event_start", new Date());
+        events.add(event2);
+
         return events;
     }
 
@@ -153,7 +171,7 @@ public class DatabaseBackend {
      * @return a hashmap of all the attributes of the event.
      * @throws OlympicsDBException
      */
-    HashMap<String, Object> eventDetails(String eventName) throws OlympicsDBException {
+    HashMap<String, Object> eventDetails(Integer eventId) throws OlympicsDBException {
         // FIXME: Replace the following with REAL OPERATIONS!
 
         OlympicEntity event = new OlympicEntity("200MFreestyle", new Date(), "Points", "Swimming", "SIT");
@@ -421,5 +439,7 @@ public class DatabaseBackend {
         conn = DriverManager.getConnection(connstring, dbUser, dbPass);
         return conn;
     }
+
+
     
 }
