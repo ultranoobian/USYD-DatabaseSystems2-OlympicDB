@@ -44,6 +44,7 @@ public final class GuiFrontEnd {
     private final BookingsCreationScreen bookingsCreationScreen;
     private final BookingHistoryScreen historyScreen;
 	private final EventBrowserScreen eventBrowserScreen;    
+	private final EventResultsScreen eventResultsScreen; 
 	
     // Navigation buttons
     private final JPanel navBar;
@@ -54,7 +55,7 @@ public final class GuiFrontEnd {
     private final String optBrowseJourneys = "Browse Journeys";
     private final String optHistory = "Browse Bookings";
     private final String optLogOut = "Log Out";
-	private final String optBrowseEvents = "Browse Events";   
+	private final String optBrowseEvents = "Browse Events";
 
     public GuiFrontEnd(OlympicsDBClient root) {
         client = root;
@@ -92,7 +93,7 @@ public final class GuiFrontEnd {
                 client.showJourneyAvailability();
             }
         });
-        // Note: Make booking 
+        // Note: Make booking accessed through this
         
         addMenuOption(optBrowseEvents, new ActionListener() {
             @Override
@@ -134,6 +135,7 @@ public final class GuiFrontEnd {
         registerScreen(historyScreen = new BookingHistoryScreen(root), "historyScreen");
         registerScreen(bookingsCreationScreen = new BookingsCreationScreen(root), "bookingsCreationScreen");
         registerScreen(eventBrowserScreen = new EventBrowserScreen(root), "eventBrowserScreen");
+        registerScreen(eventResultsScreen = new EventResultsScreen(root), "eventResultsScreen");
         
         content.add(mainPanel, BorderLayout.CENTER);
         window.setContentPane(content);
@@ -185,8 +187,13 @@ public final class GuiFrontEnd {
     public void showEventBrowserScreen() {
     	screenSelect.show(mainPanel, "eventBrowserScreen");
         setNavButtons(true);
+        setNavButton(this.optBrowseEvents, false);
     }
     
+	public void showEventResultsScreen() {
+		screenSelect.show(mainPanel, "eventResultsScreen");
+        setNavButtons(true);
+	}
     
     /*
      *  Display message in status bar
@@ -228,6 +235,12 @@ public final class GuiFrontEnd {
     public EventBrowserScreen getEventBrowserScreen() {
         return eventBrowserScreen;
     }
+    
+	public EventResultsScreen getEventResultsScreen() {
+		return eventResultsScreen;
+	}
+    
+    
     //
     // Private utility methods
     //
@@ -260,5 +273,6 @@ public final class GuiFrontEnd {
     private void setNavButton(String name, boolean status) {
         buttons.get(name).setEnabled(status);
     }
+
 
 }

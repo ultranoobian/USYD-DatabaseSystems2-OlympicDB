@@ -8,7 +8,6 @@ import java.util.HashMap;
 import javax.swing.SwingUtilities;
 
 import usyd.it.olympics.data.BookingDetails;
-import usyd.it.olympics.data.EventDetails;
 import usyd.it.olympics.gui.GuiFrontEnd;
 
 public class OlympicsDBClient {
@@ -194,12 +193,12 @@ public class OlympicsDBClient {
 	}
 	
 	public void getEventResults(Integer eventid) {
-	       setMessage("Getting Event details");
+	       setMessage("Getting event results");
 	        try {
-	        	HashMap<String,Object> eventDetails = db.eventDetails(eventid);
-	            gui.getReportScreen().show(EventDetails.getSummary(eventDetails));
-	            gui.showReportScreen();
-	            setMessage("Details fetched.");
+	        	ArrayList<HashMap<String, Object>> eventDetails = db.eventResults(eventid);
+	            gui.getEventResultsScreen().setTuples(eventDetails);
+	            gui.showEventResultsScreen();
+	            setMessage("Results fetched.");
 	        } catch (OlympicsDBException e) {
 	            setMessage(e.getMessage());
 	        }

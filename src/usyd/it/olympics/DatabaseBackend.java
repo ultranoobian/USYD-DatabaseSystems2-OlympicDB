@@ -21,9 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 
-import usyd.it.olympics.data.OlympicEntity;
-import usyd.it.olympics.data.OlympicJourney;
-
 /**
  * Database interfacing backend for client. This class uses JDBC to connect to
  * the database, and provides methods to obtain query data.
@@ -123,19 +120,6 @@ public class DatabaseBackend {
     //////////  Events  //////////
 
     /**
-     * Get the events listed in the olympics
-     * @return List of events
-     * @throws OlympicsDBException
-     */
-    ArrayList<HashMap<String,Object>> allEvents() throws OlympicsDBException {
-        // FIXME: Replace The following with REAL OPERATIONS!
-
-        ArrayList<HashMap<String,Object>> events = new ArrayList<HashMap<String,Object>>();
-//        events.add(new OlympicEntity("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
-        return events;
-    }
-
-    /**
      * Get all of the events listed in the olympics for a given sport
      *
      * @param sportname the ID of the sport we are filtering by
@@ -169,31 +153,42 @@ public class DatabaseBackend {
     }
 
     /**
-     * Get the events listed in the olympics that a member has participated in
-     * @param memberID the ID of the member
-     * @return A list of all the sports the member has participated in
+     * Retrieve the results for a single event
+     * @param eventId the key of the event
+     * @return a hashmap for each result in the event.
      * @throws OlympicsDBException
      */
-    ArrayList<HashMap<String, Object>> getEventsForMember(String memberID) throws OlympicsDBException{
-         // FIXME: Replace the following with REAL OPERATIONS!
-
-        ArrayList<HashMap<String, Object>> events = new ArrayList<>();
-//        events.add(new OlympicEntity("200M Freestyle", new Date(),"Points", "Swimming", "SIT"));
-        return events;
-    }
-
-    /**
-     * The details of a single event
-     * @param eventName the event name
-     * @return a hashmap of all the attributes of the event.
-     * @throws OlympicsDBException
-     */
-    HashMap<String, Object> eventDetails(Integer eventId) throws OlympicsDBException {
+    ArrayList<HashMap<String, Object>> eventResults(Integer eventId) throws OlympicsDBException {
         // FIXME: Replace the following with REAL OPERATIONS!
 
-        OlympicEntity event = new OlympicEntity("200MFreestyle", new Date(), "Points", "Swimming", "SIT");
+    	ArrayList<HashMap<String, Object>> results = new ArrayList<>();
 
-        return event.asHashMap();
+    	
+        HashMap<String,Object> result1 = new HashMap<String,Object>();
+        result1.put("participant", "The Frog, Kermit");
+        result1.put("country_name", "Fraggle Rock");
+        result1.put("medal", "Gold");
+        results.add(result1);
+        
+        HashMap<String,Object> result2 = new HashMap<String,Object>();
+        result2.put("participant", "Cirus, Miley");
+        result2.put("country_name", "United States");
+        result2.put("medal", "Silver");
+        results.add(result2);
+        
+        HashMap<String,Object> result3 = new HashMap<String,Object>();
+        result3.put("participant", "Bond, James");
+        result3.put("country_name", "Great Britain");
+        result3.put("medal", "Bronze");
+        results.add(result3);
+
+        HashMap<String,Object> result4 = new HashMap<String,Object>();
+        result4.put("participant", "McKenzie, Namor");
+        result4.put("country_name", "Atlantis");
+        result4.put("medal", null);
+        results.add(result4);
+
+        return results;
     }
 
 
@@ -209,7 +204,7 @@ public class DatabaseBackend {
         // FIXME: Replace the following with REAL OPERATIONS!
         ArrayList<HashMap<String, Object>> journeys = new ArrayList<>();
 
-        journeys.add(new OlympicJourney("TR870R", new Date(), "SIT", "Wentworth", 4, 7).asHashMap());
+        //journeys.add(new OlympicJourney("TR870R", new Date(), "SIT", "Wentworth", 4, 7).asHashMap());
 
         return journeys;
     }
@@ -225,7 +220,7 @@ public class DatabaseBackend {
         // FIXME: Replace the following with REAL OPERATIONS!
         ArrayList<HashMap<String, Object>> journeys = new ArrayList<>();
 
-        journeys.add(new OlympicJourney("TR870R", journeyDate, "SIT", "Wentworth", 4, 7).asHashMap());
+        //journeys.add(new OlympicJourney("TR870R", journeyDate, "SIT", "Wentworth", 4, 7).asHashMap());
 
         return journeys;
     }

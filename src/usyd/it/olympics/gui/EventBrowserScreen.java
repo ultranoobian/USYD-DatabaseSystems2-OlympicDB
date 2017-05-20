@@ -37,7 +37,9 @@ public class EventBrowserScreen extends GuiScreen {
 	protected final GeneralTupleConverter eventConv = new GeneralTupleConverter(
 			new String[] { "event_id", "sport_id", "event_name", "event_gender", "sport_venue", "event_start"},
 			new Class<?>[] { Integer.class, Integer.class, String.class, String.class, String.class, Date.class});
-	private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(eventConv);
+	private final HashMapTupleTabelModel list = new HashMapTupleTabelModel(eventConv,
+		new String[] { "event_name", "event_gender", "sport_venue", "event_start"},
+		new String[] { "Event", "Gender","Venue","Starts"});
 	private final ListSelectionModel listSelection;
 	private final JComboBox<HashMap<String, Object>> sportChooser;
 

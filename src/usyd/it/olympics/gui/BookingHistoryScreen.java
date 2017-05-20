@@ -31,7 +31,7 @@ public class BookingHistoryScreen extends GuiScreen {
     		new String[] { "vehicle_code","origin_name", "dest_name", "when_departs","when_arrives"},
     		new String[] { "Vehicle", "Origin","Destination","Departs","Arrives"});
     private final JButton btnGetDetails;
-    private final ListSelectionModel baySelection;
+    private final ListSelectionModel selectionModel;
 	
 
     public BookingHistoryScreen(OlympicsDBClient r) {
@@ -45,7 +45,7 @@ public class BookingHistoryScreen extends GuiScreen {
         panel_.add(scrollPane);
         
         bookingsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        baySelection = bookingsTable.getSelectionModel();
+        selectionModel = bookingsTable.getSelectionModel();
         
         // Include a button to allow a booking to be made for the current bay
         btnGetDetails = new JButton("Get Details");
@@ -54,13 +54,13 @@ public class BookingHistoryScreen extends GuiScreen {
         btnGetDetails.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                int index = baySelection.getMinSelectionIndex();
+                int index = selectionModel.getMinSelectionIndex();
                 if (index>=0)
 						client_.showBookingDetails(bookConv.getInt("journey_id", bookingList.getTuple(index)));
                 }
         }); 
         
-        baySelection.addListSelectionListener(new ListSelectionListener() {
+        selectionModel.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) { 
                 ListSelectionModel lsm = (ListSelectionModel)e.getSource();
