@@ -245,8 +245,9 @@ public class DatabaseBackend {
      * 
      * @return Various details of journey - see JourneyDetails.java
      * @throws OlympicsDBException
+     * @param journey_id
      */
-    public HashMap<String,Object> getJourneyDetails(Integer jouneyID) throws OlympicsDBException {
+    public HashMap<String,Object> getJourneyDetails(Integer jouneyId) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
     	HashMap<String,Object> details = new HashMap<String,Object>();
 
