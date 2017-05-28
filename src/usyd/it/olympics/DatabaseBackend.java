@@ -34,6 +34,8 @@ public class DatabaseBackend {
 
     ///////////////////////////////
     /// DB Connection details
+	/// These are set in the constructor so you should never need to read or 
+	/// write to them yourself 
     ///////////////////////////////
     private final String dbUser;
     private final String dbPass;
@@ -51,12 +53,16 @@ public class DatabaseBackend {
      * 
      * Implements Core Functionality (a)
      *
-     * @return true if username is for a valid memberID and password is correct
+     * @return basic details of user if username is for a valid memberID and password is correct
      * @throws OlympicsDBException 
      * @throws SQLException
      */
     public HashMap<String,Object> checkLogin(String member, char[] password) throws OlympicsDBException  {
-        HashMap<String,Object> details = null;
+    	// Note that password is a char array for security reasons.
+    	// Don't worry about this: just turn it into a string to use in this function
+    	// with "new String(password)"
+    	
+    	HashMap<String,Object> details = null;
         try {
             Connection conn = getConnection();
         	
@@ -69,12 +75,6 @@ public class DatabaseBackend {
             	details = new HashMap<String,Object>();
 
     	        // Populate with record data
-            	details.put("member_id", member);
-            	details.put("title", "Mr");
-            	details.put("first_name", "Potato");
-            	details.put("family_name", "Head");
-            	details.put("country_name", "Australia");
-            	details.put("residence", "SIT");
             	details.put("member_type", "athlete");
             }
         } catch (Exception e) {
@@ -86,16 +86,13 @@ public class DatabaseBackend {
     /**
      * Obtain details for the current memberID
      * @param memberID 
-     * @param member_type 
      *
-     *
-     * @return text to be displayed in the home screen
+     * @return Details of member
      * @throws OlympicsDBException
      */
     public HashMap<String, Object> getMemberDetails(String memberID) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
     	HashMap<String, Object> details = new HashMap<String, Object>();
-    	//details.put(arg0, arg1)= "Hello Mr Joe Bloggs";
     	
     	details.put("member_id", memberID);
     	details.put("member_type", "athlete");
@@ -122,11 +119,11 @@ public class DatabaseBackend {
     /**
      * Get all of the events listed in the olympics for a given sport
      *
-     * @param sportname the ID of the sport we are filtering by
+     * @param sportId the ID of the sport we are filtering by
      * @return List of the events for that sport
      * @throws OlympicsDBException
      */
-    ArrayList<HashMap<String, Object>> getEventsOfSport(Integer sportname) throws OlympicsDBException {
+    ArrayList<HashMap<String, Object>> getEventsOfSport(Integer sportId) throws OlympicsDBException {
         // FIXME: Replace the following with REAL OPERATIONS!
 
         ArrayList<HashMap<String, Object>> events = new ArrayList<>();
@@ -249,9 +246,8 @@ public class DatabaseBackend {
      * @return Various details of journey - see JourneyDetails.java
      * @throws OlympicsDBException
      */
-    public HashMap<String,Object> getJourneyDetails(int bay) throws OlympicsDBException {
+    public HashMap<String,Object> getJourneyDetails(Integer jouneyID) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
-        // See the constructor in BayDetails.java
     	HashMap<String,Object> details = new HashMap<String,Object>();
 
     	details.put("journey_id", Integer.valueOf(17));
