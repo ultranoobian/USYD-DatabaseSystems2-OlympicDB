@@ -3,8 +3,8 @@ package usyd.it.olympics;
 
 /**
  * Database back-end class for simple gui.
- * 
- * The DatabaseBackend class defined in this file holds all the methods to 
+ *
+ * The DatabaseBackend class defined in this file holds all the methods to
  * communicate with the database and pass the results back to the GUI.
  *
  *
@@ -24,8 +24,8 @@ import java.util.Properties;
 /**
  * Database interfacing backend for client. This class uses JDBC to connect to
  * the database, and provides methods to obtain query data.
- * 
- * Most methods return database information in the form of HashMaps (sets of 
+ *
+ * Most methods return database information in the form of HashMaps (sets of
  * key-value pairs), or ArrayLists of HashMaps for multiple results.
  *
  * @author Bryn Jeffries {@literal <bryn.jeffries@sydney.edu.au>}
@@ -34,8 +34,8 @@ public class DatabaseBackend {
 
     ///////////////////////////////
     /// DB Connection details
-	/// These are set in the constructor so you should never need to read or 
-	/// write to them yourself 
+	/// These are set in the constructor so you should never need to read or
+	/// write to them yourself
     ///////////////////////////////
     private final String dbUser;
     private final String dbPass;
@@ -50,32 +50,43 @@ public class DatabaseBackend {
 
     /**
      * Validate memberID details
-     * 
+     *
      * Implements Core Functionality (a)
      *
      * @return basic details of user if username is for a valid memberID and password is correct
-     * @throws OlympicsDBException 
+     * @throws OlympicsDBException
      * @throws SQLException
      */
     public HashMap<String,Object> checkLogin(String member, char[] password) throws OlympicsDBException  {
     	// Note that password is a char array for security reasons.
     	// Don't worry about this: just turn it into a string to use in this function
     	// with "new String(password)"
-    	
+
     	HashMap<String,Object> details = null;
         try {
             Connection conn = getConnection();
-        	
-	        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
-	        // Don't forget you have memberID variables memberUser available to
-	        // use in a query.
-	        // Query whether login (memberID, password) is correct...
-            boolean valid = (member.equals("testuser") && new String(password).equals("testpass"));
-            if (valid) {
-            	details = new HashMap<String,Object>();
+			String sql = "SELECT m.member_id, (CASE "
+					+ "WHEN (EXISTS(SELECT 1 FROM athlete WHERE member_id = ?)) THEN 'athlete' "
+					+ "WHEN (EXISTS(SELECT 1 FROM staff WHERE member_id = ?)) THEN 'staff' "
+					+ "WHEN (EXISTS(SELECT 1 FROM official WHERE member_id = ?)) THEN 'official' END) "
+					+ "AS member_type "
+					+ "FROM Member m WHERE (m.member_id = ? AND m.pass_word = ?);";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, member);
+			ps.setString(2, member);
+			ps.setString(3, member);
+			ps.setString(4, member);
+			ps.setString(5, (new String(password)));
+			ResultSet s = ps.executeQuery();
+			s.next();
 
-    	        // Populate with record data
-            	details.put("member_type", "athlete");
+			details = new HashMap<String,Object>();
+
+			details.put("member_id", s.getString(1));
+			details.put("member_type", s.getString(2));
+
+			ps.close();
+            reallyClose(conn);
             }
         } catch (Exception e) {
             throw new OlympicsDBException("Error checking login details", e);
@@ -85,7 +96,7 @@ public class DatabaseBackend {
 
     /**
      * Obtain details for the current memberID
-     * @param memberID 
+     * @param memberID
      *
      * @return Details of member
      * @throws OlympicsDBException
@@ -93,7 +104,7 @@ public class DatabaseBackend {
     public HashMap<String, Object> getMemberDetails(String memberID) throws OlympicsDBException {
         // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
     	HashMap<String, Object> details = new HashMap<String, Object>();
-    	
+
     	details.put("member_id", memberID);
     	details.put("member_type", "athlete");
     	details.put("title", "Mr");
@@ -103,13 +114,13 @@ public class DatabaseBackend {
     	details.put("residence", "SIT");
     	details.put("member_type", "athlete");
     	details.put("num_bookings", Integer.valueOf(20));
-    	
+
     	// Some attributes fetched may depend upon member_type
     	// This is for an athlete
     	details.put("num_gold", Integer.valueOf(5));
     	details.put("num_silver", Integer.valueOf(4));
     	details.put("num_bronze", Integer.valueOf(1));
-        
+
         return details;
     }
 
@@ -127,7 +138,7 @@ public class DatabaseBackend {
         // FIXME: Replace the following with REAL OPERATIONS!
 
         ArrayList<HashMap<String, Object>> events = new ArrayList<>();
-        
+
         HashMap<String,Object> event1 = new HashMap<String,Object>();
         event1.put("event_id", Integer.valueOf(123));
         event1.put("sport_id", Integer.valueOf(3));
@@ -136,7 +147,7 @@ public class DatabaseBackend {
         event1.put("sport_venue", "ANZ Stadium");
         event1.put("event_start", new Date());
         events.add(event1);
-        
+
         HashMap<String,Object> event2 = new HashMap<String,Object>();
         event2.put("event_id", Integer.valueOf(123));
         event2.put("sport_id", Integer.valueOf(3));
@@ -160,19 +171,19 @@ public class DatabaseBackend {
 
     	ArrayList<HashMap<String, Object>> results = new ArrayList<>();
 
-    	
+
         HashMap<String,Object> result1 = new HashMap<String,Object>();
         result1.put("participant", "The Frog, Kermit");
         result1.put("country_name", "Fraggle Rock");
         result1.put("medal", "Gold");
         results.add(result1);
-        
+
         HashMap<String,Object> result2 = new HashMap<String,Object>();
         result2.put("participant", "Cirus, Miley");
         result2.put("country_name", "United States");
         result2.put("medal", "Silver");
         results.add(result2);
-        
+
         HashMap<String,Object> result3 = new HashMap<String,Object>();
         result3.put("participant", "Bond, James");
         result3.put("country_name", "Great Britain");
@@ -211,13 +222,13 @@ public class DatabaseBackend {
         journey1.put("when_arrives", new Date());
         journey1.put("available_seats", Integer.valueOf(3));
         journeys.add(journey1);
-        
+
         return journeys;
     }
-    
+
     ArrayList<HashMap<String,Object>> getMemberBookings(String memberID) throws OlympicsDBException {
         ArrayList<HashMap<String,Object>> bookings = new ArrayList<HashMap<String,Object>>();
-        
+
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
         HashMap<String,Object> bookingex1 = new HashMap<String,Object>();
         bookingex1.put("journey_id", Integer.valueOf(17));
@@ -236,13 +247,13 @@ public class DatabaseBackend {
         bookingex2.put("when_departs", new Date());
         bookingex2.put("when_arrives", new Date());
         bookings.add(bookingex2);
-        
+
         return bookings;
     }
-                
+
     /**
      * Get details for a specific journey
-     * 
+     *
      * @return Various details of journey - see JourneyDetails.java
      * @throws OlympicsDBException
      * @param journey_id
@@ -259,13 +270,13 @@ public class DatabaseBackend {
         details.put("when_arrives", new Date());
         details.put("capacity", Integer.valueOf(6));
         details.put("nbooked", Integer.valueOf(3));
-    	
+
         return details;
     }
-    
+
     public HashMap<String,Object> makeBooking(String byStaff, String forMember, String vehicle, Date departs) throws OlympicsDBException {
     	HashMap<String,Object> booking = null;
-    	
+
         // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
     	booking = new HashMap<String,Object>();
         booking.put("vehicle", "TR870R");
@@ -277,7 +288,7 @@ public class DatabaseBackend {
     	booking.put("whenbooked", new Date());
     	return booking;
     }
-    
+
     public HashMap<String,Object> getBookingDetails(String memberID, Integer journeyId) throws OlympicsDBException {
     	HashMap<String,Object> booking = null;
 
@@ -293,33 +304,33 @@ public class DatabaseBackend {
     	booking.put("bookedfor_name", "Mike");
     	booking.put("when_booked", new Date());
     	booking.put("when_arrives", new Date());
-    	
+
 
         return booking;
     }
-    
+
 	public ArrayList<HashMap<String, Object>> getSports() throws OlympicsDBException {
 		ArrayList<HashMap<String,Object>> sports = new ArrayList<HashMap<String,Object>>();
-		
+
 		// FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
 		HashMap<String,Object> sport1 = new HashMap<String,Object>();
 		sport1.put("sport_id", Integer.valueOf(1));
 		sport1.put("sport_name", "Chillaxing");
 		sport1.put("discipline", "Couch Potatoing");
 		sports.add(sport1);
-		
+
 		HashMap<String,Object> sport2 = new HashMap<String,Object>();
 		sport2.put("sport_id", Integer.valueOf(2));
 		sport2.put("sport_name", "Frobnicating");
 		sport2.put("discipline", "Tweaking");
 		sports.add(sport2);
-		
+
 		HashMap<String,Object> sport3 = new HashMap<String,Object>();
 		sport3.put("sport_id", Integer.valueOf(3));
 		sport3.put("sport_name", "Frobnicating");
 		sport3.put("discipline", "Fiddling");
 		sports.add(sport3);
-		
+
 		return sports;
 	}
 
@@ -352,19 +363,19 @@ public class DatabaseBackend {
     	String port = props.getProperty("port");
     	String dbname = props.getProperty("dbname");
     	String server = props.getProperty("address");;
-    	
+
         // Load JDBC driver and setup connection details
     	String vendor = props.getProperty("dbvendor");
 		if(vendor==null) {
     		throw new OlympicsDBException("No vendor config data");
-    	} else if ("postgresql".equals(vendor)) { 
+    	} else if ("postgresql".equals(vendor)) {
     		Class.forName("org.postgresql.Driver");
     		connstring = "jdbc:postgresql://" + server + ":" + port + "/" + dbname;
     	} else if ("oracle".equals(vendor)) {
     		Class.forName("oracle.jdbc.driver.OracleDriver");
     		connstring = "jdbc:oracle:thin:@" + server + ":" + port + ":" + dbname;
     	} else throw new OlympicsDBException("Unknown database vendor: " + vendor);
-		
+
 		// test the connection
 		Connection conn = null;
 		try {
@@ -377,7 +388,7 @@ public class DatabaseBackend {
     }
 
 	/**
-	 * Utility method to ensure a connection is closed without 
+	 * Utility method to ensure a connection is closed without
 	 * generating any exceptions
 	 * @param conn Database connection
 	 */
@@ -400,5 +411,5 @@ public class DatabaseBackend {
     }
 
 
-    
+
 }
