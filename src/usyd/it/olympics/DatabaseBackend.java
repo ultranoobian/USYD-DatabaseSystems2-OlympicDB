@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,14 +65,13 @@ public class DatabaseBackend {
     	// with "new String(password)"
 
     	HashMap<String,Object> details = null;
-        try {
-            Connection conn = getConnection();
+		try {
+			Connection conn = getConnection();
 			String sql = "SELECT m.member_id, (CASE "
 					+ "WHEN (EXISTS(SELECT 1 FROM athlete WHERE member_id = ?)) THEN 'athlete' "
 					+ "WHEN (EXISTS(SELECT 1 FROM staff WHERE member_id = ?)) THEN 'staff' "
 					+ "WHEN (EXISTS(SELECT 1 FROM official WHERE member_id = ?)) THEN 'official' END) "
-					+ "AS member_type "
-					+ "FROM Member m WHERE (m.member_id = ? AND m.pass_word = ?);";
+					+ "AS member_type " + "FROM Member m WHERE (m.member_id = ? AND m.pass_word = ?);";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, member);
 			ps.setString(2, member);
@@ -80,18 +81,18 @@ public class DatabaseBackend {
 			ResultSet s = ps.executeQuery();
 			s.next();
 
-			details = new HashMap<String,Object>();
+			details = new HashMap<String, Object>();
 
 			details.put("member_id", s.getString(1));
 			details.put("member_type", s.getString(2));
 
 			ps.close();
-            reallyClose(conn);
-            }
-        } catch (Exception e) {
-            throw new OlympicsDBException("Error checking login details", e);
-        }
-        return details;
+			reallyClose(conn);
+
+		} catch (Exception e) {
+			throw new OlympicsDBException("Error checking login details", e);
+		}
+		return details;
     }
 
     /**
