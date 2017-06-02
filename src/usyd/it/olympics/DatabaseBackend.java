@@ -68,25 +68,19 @@ public class DatabaseBackend {
     	HashMap<String,Object> details = null;
 		try {
 			Connection conn = getConnection();
-			String sql = "SELECT m.member_id, (CASE "
-					+ "WHEN (EXISTS(SELECT 1 FROM athlete WHERE member_id = ?)) THEN 'athlete' "
-					+ "WHEN (EXISTS(SELECT 1 FROM staff WHERE member_id = ?)) THEN 'staff' "
-					+ "WHEN (EXISTS(SELECT 1 FROM official WHERE member_id = ?)) THEN 'official' END) "
-					+ "AS member_type " + "FROM Member m WHERE (m.member_id = ? AND m.pass_word = ?);";
+			String sql = "SELECT m.member_id"
+			+ " FROM Member m WHERE (m.member_id = ? AND m.pass_word = ?);";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, member);
-			ps.setString(2, member);
-			ps.setString(3, member);
-			ps.setString(4, member);
-			ps.setString(5, (new String(password)));
+			ps.setString(2, (new String(password)));
 			ResultSet s = ps.executeQuery();
-			s.next();
-
 			details = new HashMap<String, Object>();
-
-			details.put("member_id", s.getString(1));
-			details.put("member_type", s.getString(2));
-
+			if(s.next()){
+				details.put("member_id", s.getString(1));
+			} else {
+				return null;
+			}
+			
 			ps.close();
 			reallyClose(conn);
 
