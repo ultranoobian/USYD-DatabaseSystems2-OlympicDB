@@ -118,7 +118,7 @@ public class DatabaseBackend {
 	    	details.put("member_id", s.getString("member_id"));
 	    	details.put("member_type", s.getString("member_type"));
 	    	details.put("title", s.getString("title"));
-	    	details.put("first_name", s.getString("title"));
+	    	details.put("first_name", s.getString("given_names"));
 	    	details.put("family_name", s.getString("family_name"));
 	    	details.put("country_name", s.getString("country_name"));
 	    	details.put("residence", s.getString("place_name"));
