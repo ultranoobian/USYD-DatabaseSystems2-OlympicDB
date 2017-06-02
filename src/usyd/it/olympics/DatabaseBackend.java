@@ -97,106 +97,108 @@ public class DatabaseBackend {
      * @return Details of member
      * @throws OlympicsDBException
      */
-    public HashMap<String, Object> getMemberDetails(String memberID) throws OlympicsDBException {
-    	HashMap<String, Object> details = new HashMap<String, Object>();
-    	
-    	try{ 
-    		Connection conn = getConnection();
-    		
-    		String sql;
-    		PreparedStatement ps;
-    		ResultSet s;
-    		
-    		sql = "SELECT * FROM member_details(?)";
-    		ps = conn.prepareStatement(sql);
+	public HashMap<String, Object> getMemberDetails(String memberID) throws OlympicsDBException {
+		HashMap<String, Object> details = new HashMap<String, Object>();
+
+		try {
+			Connection conn = getConnection();
+
+			String sql;
+			PreparedStatement ps;
+			ResultSet s;
+
+			sql = "SELECT * FROM member_details(?)";
+			ps = conn.prepareStatement(sql);
 			ps.setString(1, memberID);
-			
+
 			s = ps.executeQuery();
-			
+
 			s.next();
-			
-	    	details.put("member_id", s.getString("member_id"));
-	    	details.put("member_type", s.getString("member_type"));
-	    	details.put("title", s.getString("title"));
-	    	details.put("first_name", s.getString("given_names"));
-	    	details.put("family_name", s.getString("family_name"));
-	    	details.put("country_name", s.getString("country_name"));
-	    	details.put("residence", s.getString("place_name"));
-	    	details.put("num_bookings", s.getInt("bookings_count"));
-		    	
-	    	
-	    	ps.close();
-	    	s.close();
-	    	
-	    	
-	    	switch((String) details.get("member_type")) {
-	    		case "athlete":
-	    			sql = "SELECT * FROM athlete_details(?)";
-	    			ps = conn.prepareStatement(sql);
-	    			ps.setString(1, memberID);
-	    			s = ps.executeQuery();
-	    			ps.close();
 
-	    			s.next();
-	    			details.put("num_gold", s.getInt("g"));
-	    			details.put("num_silver", s.getInt("s"));
-	    			details.put("num_bronze", s.getInt("b"));
-	    			
-	    			Array teams = s.getArray("teams");
-	    			String[] team_names = (String[])teams.getArray();
-	    			String teamlist = "";
-	    			for(int i = 0; i < team_names.length; i++) {
-	    				teamlist += team_names[i];
-	    				if(i < team_names.length - 1) {
-	    					teamlist += ",";
-	    				}
-	    			}
-	    			
-	    			details.put("teamlist", teamlist);
-	    			break;
-	    		case "staff":
-	    			sql = "SELECT * FROM staff_details(?)";
-	    			ps = conn.prepareStatement(sql);
-	    			ps.setString(1, memberID);
-	    			s = ps.executeQuery();
+			details.put("member_id", s.getString("member_id"));
+			details.put("member_type", s.getString("member_type"));
+			details.put("title", s.getString("title"));
+			details.put("first_name", s.getString("given_names"));
+			details.put("family_name", s.getString("family_name"));
+			details.put("country_name", s.getString("country_name"));
+			details.put("residence", s.getString("place_name"));
+			details.put("num_bookings", s.getInt("bookings_count"));
 
-	    			s.next();
-	    			details.put("bookings_created", s.getInt("bookings_made_count"));
-	    			
-	    			ps.close();
-	    			s.close();
-	    			break;
-	    		case "official":
-	    			sql = "SELECT * FROM officials_details(?)";
-	    			ps = conn.prepareStatement(sql);
-	    			ps.setString(1, memberID);
-	    			s = ps.executeQuery();
-	    			
-	    			s.next();
-	    			details.put("running_events_count", s.getInt("running_events_count"));
-	    			//details.put("running_events", s.getS("runing_events")); Array get
-	    			
-	    			Array events = s.getArray("events");
-	    			String[] event_names = (String[])events.getArray();
-	    			String eventlist = "";
-	    			for(int i = 0; i < event_names.length; i++) {
-	    				eventlist += event_names[i];
-	    				if(i < event_names.length - 1) {
-	    					eventlist += ",";
-	    				}
-	    			}
-	    			
-	    			ps.close();
-	    			s.close();
-	    			break;
-	    		
-	    		default:
-	    			break;
-	    	}
-	    	reallyClose(conn);
-    	} catch(Exception e) {
-    		throw new OlympicsDBException("Error retrieving member details", e);
-    	}
+			switch ((String) details.get("member_type")) {
+			case "athlete":
+				sql = "SELECT * FROM athlete_details(?)";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, memberID);
+				s = ps.executeQuery();
+
+				s.next();
+				details.put("num_gold", s.getInt("g"));
+				details.put("num_silver", s.getInt("s"));
+				details.put("num_bronze", s.getInt("b"));
+
+				Array teams = s.getArray("teams");
+				if (teams != null) {
+					String[] team_names = (String[]) teams.getArray();
+					String teamlist = "";
+					for (int i = 0; i < team_names.length; i++) {
+						teamlist += team_names[i];
+						if (i < team_names.length - 1) {
+							teamlist += ",";
+						}
+					}
+					details.put("teamlist", teamlist);
+				} else {
+					details.put("teamlist", null);
+				}
+
+				break;
+			case "staff":
+				sql = "SELECT * FROM staff_details(?)";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, memberID);
+				s = ps.executeQuery();
+
+				s.next();
+				details.put("bookings_created", s.getInt("bookings_made_count"));
+
+				break;
+			case "official":
+				sql = "SELECT * FROM officials_details(?)";
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, memberID);
+				s = ps.executeQuery();
+
+				s.next();
+				details.put("running_events_count", s.getInt("running_events_count"));
+				// details.put("running_events", s.getS("runing_events")); Array
+				// get
+
+				Array events = s.getArray("events");
+				if (events != null) {
+					String[] event_names = (String[]) events.getArray();
+					String eventlist = "";
+					for (int i = 0; i < event_names.length; i++) {
+						eventlist += event_names[i];
+						if (i < event_names.length - 1) {
+							eventlist += ",";
+						}
+					}
+					details.put("eventlist", eventlist);
+				} else {
+					details.put("eventlist", null);
+				}
+				break;
+
+			default:
+				break;
+			}
+
+			ps.close();
+			s.close();
+			reallyClose(conn);
+		} catch (Exception e) {
+			throw new OlympicsDBException("Error retrieving member details", e);
+		}
 
 //    	details.put("member_id", memberID);
 //    	details.put("member_type", "athlete");

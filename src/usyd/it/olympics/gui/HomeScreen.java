@@ -25,23 +25,42 @@ public class HomeScreen extends GuiScreen {
 
 
 	public void showMemberDetails(HashMap<String, Object> details) {
-		// FIXME: Print the provided data
-        String message = "Hello " + details.get("title") + " "
-	    	+ details.get("first_name") + " "
-	    	+ details.get("family_name");
-        message = message.concat("\nYou are an: " + details.get("member_type"));
-        message = message.concat("\nYou are from: " + details.get("country_name"));
-        message = message.concat("\nYour live at: " + details.get("residence"));
-        
-        // This should be type-specific
-        message = message.concat("\nYour medal tally is:");
-        message = message.concat("\n\tGold: " + details.get("num_gold"));
-        message = message.concat("\n\tSilver: "+ details.get("num_silver"));
-        message = message.concat("\n\tBronze: "+ details.get("num_bronze"));
-        
-        message = message.concat("\nYou have made " + details.get("num_bookings") +" bookings");
+		String message = "Hello " + details.get("title") + " " + details.get("first_name") + " "
+				+ details.get("family_name");
+		message = message.concat("\nYou are an: " + details.get("member_type"));
+		message = message.concat("\nYou are from: " + details.get("country_name"));
+		message = message.concat("\nYour live at: " + details.get("residence"));
 
-    	
-        description.setText(message);		
+		// This should be type-specific
+		switch ((String) details.get("member_type")) {
+		case "staff":
+			if (details.get("bookings_created") != null) {
+				message = message.concat(
+						"\nYou have made " + details.get("bookings_created") + " Booking(s) for other people so far");
+			} else {
+				message = message.concat("\nYou have not made any bookings for other people so far");
+			}
+			break;
+		case "official":
+			if (details.get("eventlist") != null) {
+				message = message.concat("\nYou are running these events: " + details.get("eventlist"));
+			}
+			break;
+		case "athlete":
+			if (details.get("teamlist") != null) {
+				message = message.concat("\nYou are part of Team(s): " + details.get("teamlist"));
+			} else {
+				message = message.concat("\nYou are not part of a Olympic Team");
+			}
+			message = message.concat("\nYour medal tally is:");
+			message = message.concat("\n\tGold: " + details.get("num_gold"));
+			message = message.concat("\n\tSilver: " + details.get("num_silver"));
+			message = message.concat("\n\tBronze: " + details.get("num_bronze"));
+			break;
+		}
+
+		message = message.concat("\nYou have " + details.get("num_bookings") + " bookings");
+
+		description.setText(message);
 	}
 }
