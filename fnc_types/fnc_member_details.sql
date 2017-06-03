@@ -1,20 +1,20 @@
 ﻿--DROP FUNCTION member_details(character varying);
 
-CREATE OR REPLACE FUNCTION member_details(search_id varchar(10)) 
+CREATE OR REPLACE FUNCTION member_details(search_id varchar(10))
 RETURNS TABLE(
 	member_id varchar(10)
-	,type varchar
+	,member_type varchar
 	,title varchar(4)
 	,family_name varchar(30)
 	,given_names varchar(30)
 	,country_name varchar(40)
 	,accom varchar(80)
 	,bookings_count bigint
- ) AS 
-$BODY$
+ ) AS
+$$
 BEGIN
 
-RETURN QUERY SELECT 
+RETURN QUERY SELECT
 	search_id
 	,member_type(search_id)
 	,m.title
@@ -28,6 +28,6 @@ RETURN QUERY SELECT
 	JOIN place pl ON (m.accommodation = pl.place_id)
 	WHERE m.member_id = search_id;
 
-END ; $BODY$
+END ; $$
 
 LANGUAGE plpgsql;
