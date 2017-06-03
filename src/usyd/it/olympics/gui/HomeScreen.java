@@ -30,8 +30,10 @@ public class HomeScreen extends GuiScreen {
 		message = message.concat("\nYou are an: " + details.get("member_type"));
 		message = message.concat("\nYou are from: " + details.get("country_name"));
 		message = message.concat("\nYour live at: " + details.get("residence"));
+		message = message.concat("\nYou have " + details.get("num_bookings") + " bookings");
 
 		// This should be type-specific
+		message = message.concat("\n\nAs a " + (String) details.get("member_type") + ":");
 		switch ((String) details.get("member_type")) {
 		case "staff":
 			if (details.get("bookings_created") != null) {
@@ -44,6 +46,8 @@ public class HomeScreen extends GuiScreen {
 		case "official":
 			if (details.get("eventlist") != null) {
 				message = message.concat("\nYou are running these events: " + details.get("eventlist"));
+			} else {
+				message = message.concat("\nYou not running an events");
 			}
 			break;
 		case "athlete":
@@ -59,7 +63,6 @@ public class HomeScreen extends GuiScreen {
 			break;
 		}
 
-		message = message.concat("\nYou have " + details.get("num_bookings") + " bookings");
 
 		description.setText(message);
 	}

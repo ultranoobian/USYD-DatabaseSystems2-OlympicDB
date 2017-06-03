@@ -163,7 +163,7 @@ public class DatabaseBackend {
 
 				break;
 			case "official":
-				sql = "SELECT * FROM officials_details(?)";
+				sql = "SELECT * FROM official_details(?)";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, memberID);
 				s = ps.executeQuery();
@@ -173,7 +173,7 @@ public class DatabaseBackend {
 				// details.put("running_events", s.getS("runing_events")); Array
 				// get
 
-				Array events = s.getArray("events");
+				Array events = s.getArray("running_events");
 				if (events != null) {
 					String[] event_names = (String[]) events.getArray();
 					String eventlist = "";
