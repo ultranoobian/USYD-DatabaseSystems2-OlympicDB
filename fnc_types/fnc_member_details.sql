@@ -8,7 +8,7 @@ RETURNS TABLE(
 	,family_name varchar(30)
 	,given_names varchar(30)
 	,country_name varchar(40)
-	,accom varchar(80)
+	,place_name varchar(80)
 	,bookings_count bigint
  ) AS
 $$
