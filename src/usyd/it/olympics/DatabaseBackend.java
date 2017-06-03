@@ -72,15 +72,16 @@ public class DatabaseBackend {
     	HashMap<String,Object> details = null;
 		try {
 			Connection conn = getConnection();
-			String sql = "SELECT m.member_id"
-			+ " FROM Member m WHERE (m.member_id = ? AND m.pass_word = ?);";
+			String sql = "SELECT m.member_id, member_type(m.member_id) FROM member m "
+					+ "WHERE m.member_id = ? AND m.pass_word = ? ";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, member);
 			ps.setString(2, (new String(password)));
 			ResultSet s = ps.executeQuery();
 			details = new HashMap<String, Object>();
 			if(s.next()){
-				details.put("member_id", s.getString(1));
+				details.put("member_id", s.getString("member_id"));
+				details.put("member_type", s.getString("member_type"));
 			} else {
 				return null;
 			}
@@ -344,16 +345,34 @@ public class DatabaseBackend {
     ArrayList<HashMap<String, Object>> findJourneys(String fromPlace, String toPlace, Date journeyDate) throws OlympicsDBException {
         // FIXME: Replace the following with REAL OPERATIONS!
         ArrayList<HashMap<String, Object>> journeys = new ArrayList<>();
-
-        HashMap<String,Object> journey1 = new HashMap<String,Object>();
-        journey1.put("journey_id", Integer.valueOf(17));
-        journey1.put("vehicle_code", "XYZ124");
-        journey1.put("origin_name", "SIT");
-        journey1.put("dest_name", "Olympic Park");
-        journey1.put("when_departs", new Date());
-        journey1.put("when_arrives", new Date());
-        journey1.put("available_seats", Integer.valueOf(3));
-        journeys.add(journey1);
+        try{
+        	Connection conn = getConnection();
+        	String sql = "SELECT * FROM findJourneys(?, ?, ?)";
+        	PreparedStatement ps = conn.prepareStatement(sql);
+        	ps.setString(1, fromPlace);
+        	ps.setString(2, toPlace);
+        	ps.setDate(3, new java.sql.Date(journeyDate.getTime()));
+        	
+        	ResultSet s = ps.executeQuery();
+        	
+        	
+        	while(s.next()) {
+        		HashMap<String, Object> newJourney = new HashMap<String, Object>();
+        		newJourney.put("journey_id", s.getInt("journey_id"));
+        		newJourney.put("vehicle_code", s.getString("vehicle_code"));
+        		newJourney.put("origin_name", s.getString("fromPlace"));
+        		newJourney.put("dest_name", s.getString("toPlace"));
+        		newJourney.put("when_departs", new Date(s.getDate("depart_time").getTime()));
+        		newJourney.put("when_arrives", new Date(s.getDate("arrive_time").getTime()));
+        		newJourney.put("available_seats", s.getInt("remaining_seats"));
+        		
+        		journeys.add(newJourney);
+        	}
+        	
+        	
+        } catch (Exception e) {
+			throw new OlympicsDBException("Error retrieving journeys", e);
+        }
 
         return journeys;
     }
