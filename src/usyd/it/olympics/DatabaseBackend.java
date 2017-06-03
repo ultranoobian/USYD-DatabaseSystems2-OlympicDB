@@ -362,8 +362,8 @@ public class DatabaseBackend {
         		newJourney.put("vehicle_code", s.getString("vehicle_code"));
         		newJourney.put("origin_name", s.getString("fromPlace"));
         		newJourney.put("dest_name", s.getString("toPlace"));
-        		newJourney.put("when_departs", new Date(s.getDate("depart_time").getTime()));
-        		newJourney.put("when_arrives", new Date(s.getDate("arrive_time").getTime()));
+        		newJourney.put("when_departs", new Date(s.getTimestamp("depart_time").getTime()));
+        		newJourney.put("when_arrives", new Date(s.getTimestamp("arrive_time").getTime()));
         		newJourney.put("available_seats", s.getInt("remaining_seats"));
         		
         		journeys.add(newJourney);
