@@ -1,13 +1,15 @@
-﻿--DROP FUNCTION member_details(character varying);
+-- Function: allsportevents(integer)
 
-CREATE OR REPLACE FUNCTION allSportEvents(search_id integer) 
+DROP FUNCTION IF EXISTS allsportevents(integer);
+
+CREATE OR REPLACE FUNCTION allSportEvents(search_id integer)
 RETURNS TABLE(event_id integer
 	,sport_id integer
 	,event_name varchar(50)
 	,event_gender character(1)
 	,sport_venue varchar(80)
 	,event_start timestamp without time zone
- ) AS 
+ ) AS
 $BODY$
 BEGIN
 

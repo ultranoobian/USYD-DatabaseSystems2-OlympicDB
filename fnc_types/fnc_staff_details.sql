@@ -1,8 +1,10 @@
-﻿--DROP FUNCTION staff_details(character varying);
+-- Function: staff_details(character varying)
+
+DROP FUNCTION IF EXISTS staff_details(character varying);
 
 CREATE OR REPLACE FUNCTION staff_details(IN search_id character varying)
   RETURNS TABLE(bookings_made_count bigint) AS
-$$
+$BODY$
 DECLARE
 
 BEGIN
@@ -11,6 +13,6 @@ BEGIN
 RETURN QUERY SELECT COUNT(*) FROM booking WHERE booking.booked_by = search_id;
 
 
-END ; $$
+END ; $BODY$
 
 LANGUAGE plpgsql;
