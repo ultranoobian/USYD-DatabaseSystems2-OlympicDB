@@ -199,23 +199,6 @@ public class DatabaseBackend {
 		} catch (Exception e) {
 			throw new OlympicsDBException("Error retrieving member details", e);
 		}
-
-//    	details.put("member_id", memberID);
-//    	details.put("member_type", "athlete");
-//    	details.put("title", "Mr");
-//    	details.put("first_name", "Potato");
-//    	details.put("family_name", "Head");
-//    	details.put("country_name", "Australia");
-//    	details.put("residence", "SIT");
-//    	details.put("member_type", "athlete");
-//    	details.put("num_bookings", Integer.valueOf(20));
-//
-//    	// Some attributes fetched may depend upon member_type
-//    	// This is for an athlete
-//    	details.put("num_gold", Integer.valueOf(5));
-//    	details.put("num_silver", Integer.valueOf(4));
-//    	details.put("num_bronze", Integer.valueOf(1));
-
         return details;
     }
 
