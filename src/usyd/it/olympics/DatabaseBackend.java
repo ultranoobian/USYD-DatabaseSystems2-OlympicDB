@@ -12,14 +12,18 @@ package usyd.it.olympics;
  * can run this class on its own for testing without requiring the GUI.
  */
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
+
 
 /**
  * Database interfacing backend for client. This class uses JDBC to connect to
@@ -57,30 +61,34 @@ public class DatabaseBackend {
      * @throws OlympicsDBException 
      * @throws SQLException
      */
-    public HashMap<String,Object> checkLogin(String member, char[] password) throws OlympicsDBException  {
+	public HashMap<String,Object> checkLogin(String member, char[] password) throws OlympicsDBException  {
     	// Note that password is a char array for security reasons.
     	// Don't worry about this: just turn it into a string to use in this function
     	// with "new String(password)"
-    	
-    	HashMap<String,Object> details = null;
-        try {
-            Connection conn = getConnection();
-        	
-	        // FIXME: REPLACE FOLLOWING LINES WITH REAL OPERATION
-	        // Don't forget you have memberID variables memberUser available to
-	        // use in a query.
-	        // Query whether login (memberID, password) is correct...
-            boolean valid = (member.equals("testuser") && new String(password).equals("testpass"));
-            if (valid) {
-            	details = new HashMap<String,Object>();
 
-    	        // Populate with record data
-            	details.put("member_type", "athlete");
-            }
-        } catch (Exception e) {
-            throw new OlympicsDBException("Error checking login details", e);
-        }
-        return details;
+    	HashMap<String,Object> details = null;
+		try {
+			Connection conn = getConnection();
+			String sql = "SELECT m.member_id"
+			+ " FROM Member m WHERE (m.member_id = ? AND m.pass_word = ?);";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, member);
+			ps.setString(2, (new String(password)));
+			ResultSet s = ps.executeQuery();
+			details = new HashMap<String, Object>();
+			if(s.next()){
+				details.put("member_id", s.getString(1));
+			} else {
+				return null;
+			}
+			
+			ps.close();
+			reallyClose(conn);
+
+		} catch (Exception e) {
+			throw new OlympicsDBException("Error checking login details", e);
+		}
+		return details;
     }
 
     /**
@@ -127,24 +135,31 @@ public class DatabaseBackend {
         // FIXME: Replace the following with REAL OPERATIONS!
 
         ArrayList<HashMap<String, Object>> events = new ArrayList<>();
-        
-        HashMap<String,Object> event1 = new HashMap<String,Object>();
-        event1.put("event_id", Integer.valueOf(123));
-        event1.put("sport_id", Integer.valueOf(3));
-        event1.put("event_name", "Women's 5km Egg & Spoon");
-        event1.put("event_gender", "W");
-        event1.put("sport_venue", "ANZ Stadium");
-        event1.put("event_start", new Date());
-        events.add(event1);
-        
-        HashMap<String,Object> event2 = new HashMap<String,Object>();
-        event2.put("event_id", Integer.valueOf(123));
-        event2.put("sport_id", Integer.valueOf(3));
-        event2.put("event_name", "Men's 40km Cross-country Hopping");
-        event2.put("event_gender", "M");
-        event2.put("sport_venue", "Bennelong Point");
-        event2.put("event_start", new Date());
-        events.add(event2);
+        try{
+        Connection conn = getConnection();
+        	Statement stmt=null;
+        	
+        	String query="SELECT event_id,sport_id,event_name,event_gender,event_start,place_name "
+        			+ "FROM Event JOIN Place On(Place_id=sport_venue) "
+        			+ "WHERE sport_id = " 
+        			+sportId;
+        		stmt = conn.createStatement();
+        		ResultSet rset = stmt.executeQuery(query);
+        	while(rset.next()){	
+        		HashMap<String,Object> eventNo = new HashMap<String,Object>();
+        		eventNo.put("event_id", Integer.valueOf(rset.getInt("event_id")));
+        		eventNo.put("sport_id", Integer.valueOf(rset.getInt("sport_id")));
+        		 eventNo.put("event_name", rset.getString("event_name"));
+        	     eventNo.put("event_gender",rset.getString("event_gender"));
+        	     eventNo.put("sport_venue",rset.getString("place_name"));
+        	     eventNo.put("event_start", rset.getTimestamp("event_start"));
+        		events.add(eventNo);
+        	}
+        	reallyClose(conn);
+        }catch(Exception e){
+        	e.printStackTrace();
+        	
+        }
 
         return events;
     }
@@ -159,31 +174,74 @@ public class DatabaseBackend {
         // FIXME: Replace the following with REAL OPERATIONS!
 
     	ArrayList<HashMap<String, Object>> results = new ArrayList<>();
-
+    	 try{
+    	        Connection conn = getConnection();
+    	        	Statement stmt=null;
+    	        	boolean isIndividual =false;
+    	        	String query="SELECT * FROM Participates WHERE event_id="+eventId;
+    	        	stmt = conn.createStatement();
+	        		ResultSet rset = stmt.executeQuery(query);
+	        		if(rset.next()){
+	        			
+		        		if(rset.next()){
+		        			isIndividual=true;
+		        		}
+		        		query="SELECT athlete_id ,country_name,medal,family_name,given_names "
+	    	        			+ "FROM Participates join Member on(member_id=athlete_id) join Country using(country_code) "
+	    	        			+" WHERE event_id="+eventId
+	    	        			+" Order by family_name";
+		        		rset = stmt.executeQuery(query);
+		        		
+		        		while(rset.next()){	
+	    	        		HashMap<String,Object> resultNo = new HashMap<String,Object>();
+	    	        		resultNo.put("participant", rset.getString("family_name")+", "+rset.getString("given_names"));
+	    	        		resultNo.put("country_name",rset.getString("country_name"));
+	    	        		String medals=rset.getString("medal");
+	    	        		if(("G").equals(medals)){
+	    	        			medals="Gold";
+	    	        		}else if(("S").equals(medals)){
+	    	        			medals="Silver";
+	    	        		}else if(("B").equals(medals)){
+	    	        			medals="Bronze";
+	    	        		}
+	    	        		resultNo.put("medal",medals);
+	    	        		results.add(resultNo);
+	    	        	}
+	        		}
+	        		
+    	        	//team
+    	        	if(isIndividual==false){
+    	        		query="SELECT tm.athlete_id ,country_name,medal,family_name,given_names "
+	    	        			+ " FROM	(Team  t join Teammember tm on t.event_id=tm.event_id and t.team_name=tm.team_name )join Member  on(athlete_id = member_id) join Country   on (Member.country_code=Country.country_code) "
+	    	        			+" WHERE t.event_id= "+eventId
+	    	        			+" Order by family_name ";
+		        		rset = stmt.executeQuery(query);
+		        		
+		        		while(rset.next()){	
+	    	        		HashMap<String,Object> resultNo = new HashMap<String,Object>();
+	    	        		resultNo.put("participant", rset.getString("family_name")+", "+rset.getString("given_names"));
+	    	        		resultNo.put("country_name",rset.getString("country_name"));
+	    	        		String medals=rset.getString("medal");
+	    	        		if(("G").equals(medals)){
+	    	        			medals="Gold";
+	    	        		}else if(("S").equals(medals)){
+	    	        			medals="Silver";
+	    	        		}else if(("B").equals(medals)){
+	    	        			medals="Bronze";
+	    	        		}
+	    	        		resultNo.put("medal",medals);
+	    	        		results.add(resultNo);
+	    	        	}
+    	        		
+    	        	}
+	        		
+    	        	reallyClose(conn);
+    	        }catch(Exception e){
+    	        	e.printStackTrace();
+    	        	
+    	        }
     	
-        HashMap<String,Object> result1 = new HashMap<String,Object>();
-        result1.put("participant", "The Frog, Kermit");
-        result1.put("country_name", "Fraggle Rock");
-        result1.put("medal", "Gold");
-        results.add(result1);
-        
-        HashMap<String,Object> result2 = new HashMap<String,Object>();
-        result2.put("participant", "Cirus, Miley");
-        result2.put("country_name", "United States");
-        result2.put("medal", "Silver");
-        results.add(result2);
-        
-        HashMap<String,Object> result3 = new HashMap<String,Object>();
-        result3.put("participant", "Bond, James");
-        result3.put("country_name", "Great Britain");
-        result3.put("medal", "Bronze");
-        results.add(result3);
-
-        HashMap<String,Object> result4 = new HashMap<String,Object>();
-        result4.put("participant", "McKenzie, Namor");
-        result4.put("country_name", "Atlantis");
-        result4.put("medal", null);
-        results.add(result4);
+    	
 
         return results;
     }
@@ -300,25 +358,29 @@ public class DatabaseBackend {
     
 	public ArrayList<HashMap<String, Object>> getSports() throws OlympicsDBException {
 		ArrayList<HashMap<String,Object>> sports = new ArrayList<HashMap<String,Object>>();
-		
-		// FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
-		HashMap<String,Object> sport1 = new HashMap<String,Object>();
-		sport1.put("sport_id", Integer.valueOf(1));
-		sport1.put("sport_name", "Chillaxing");
-		sport1.put("discipline", "Couch Potatoing");
-		sports.add(sport1);
-		
-		HashMap<String,Object> sport2 = new HashMap<String,Object>();
-		sport2.put("sport_id", Integer.valueOf(2));
-		sport2.put("sport_name", "Frobnicating");
-		sport2.put("discipline", "Tweaking");
-		sports.add(sport2);
-		
-		HashMap<String,Object> sport3 = new HashMap<String,Object>();
-		sport3.put("sport_id", Integer.valueOf(3));
-		sport3.put("sport_name", "Frobnicating");
-		sport3.put("discipline", "Fiddling");
-		sports.add(sport3);
+		try{
+		Connection conn= getConnection();
+		Statement stmt=null;
+    	
+    	String query="SELECT sport_id,sport_name,discipline "
+    			+ "FROM Sport ";
+    		stmt = conn.createStatement();
+    		ResultSet rset = stmt.executeQuery(query);
+    	while(rset.next()){	
+    		HashMap<String,Object> sportNo = new HashMap<String,Object>();
+    		sportNo.put("sport_id", Integer.valueOf(rset.getInt("sport_id")));
+    		 sportNo.put("sport_name", rset.getString("sport_name"));
+    	     sportNo.put("discipline",rset.getString("discipline"));
+    		sports.add(sportNo);
+    	}
+    	if (conn != null)
+    	{
+    		conn.close();
+    	}
+		}catch(Exception e){
+        	e.printStackTrace();
+        	
+        }
 		
 		return sports;
 	}
@@ -370,7 +432,7 @@ public class DatabaseBackend {
 		try {
 			conn = getConnection();
 		} catch (SQLException e) {
-			throw new OlympicsDBException("Couldn't open connection", e);
+			e.printStackTrace();
 		} finally {
 			reallyClose(conn);
 		}
