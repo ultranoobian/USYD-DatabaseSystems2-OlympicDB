@@ -202,7 +202,8 @@ public class DatabaseBackend {
 			s.close();
 			reallyClose(conn);
 		} catch (Exception e) {
-			throw new OlympicsDBException("Error retrieving member details", e);
+			e.printStackTrace();
+			//throw new OlympicsDBException("Error retrieving member details", e);
 		}
         return details;
     }
