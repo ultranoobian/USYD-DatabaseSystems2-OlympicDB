@@ -1,8 +1,6 @@
 -- Function: official_details(character varying)
 
-DROP FUNCTION IF EXISTS official_details(character varying);
-
-DROP FUNCTION official_details(character varying);
+--DROP FUNCTION IF EXISTS official_details(character varying);
 
 CREATE OR REPLACE FUNCTION official_details(IN search_id character varying)
   RETURNS TABLE(running_events_count bigint, running_events text[]) AS
