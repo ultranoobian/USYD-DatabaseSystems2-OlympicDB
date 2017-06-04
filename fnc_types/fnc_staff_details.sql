@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS staff_details(character varying);
 
-CREATE OR REPLACE FUNCTION staff_details(IN search_id character varying)
+CREATE OR REPLACE FUNCTION staff_details(search_id character varying)
   RETURNS TABLE(bookings_made_count bigint) AS
 $BODY$
 DECLARE
