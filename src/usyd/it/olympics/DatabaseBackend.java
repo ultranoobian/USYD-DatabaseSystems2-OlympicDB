@@ -475,13 +475,15 @@ public class DatabaseBackend {
 				if (rs.next()) {
 					booking = new HashMap<String, Object>();
 					
-					booking.put("vehicle", vehicle);
-	        		booking.put("start_day", rs.getDate("depart_time"));
-	        		booking.put("start_time",rs.getTime("depart_time"));
-	        		booking.put("to", rs.getString("toPlace"));
-	        		booking.put("from", rs.getString("fromPlace"));
+					booking.put("journey_id", rs.getInt("journey_id"));
+					booking.put("vehicle_code", vehicle);
+					booking.put("origin_name", rs.getString("toPlace"));
+					booking.put("dest_name", rs.getString("fromPlace"));
+	        		booking.put("when_departs",rs.getTime("depart_time"));
+	        		booking.put("when_arrives", rs.getTime("arrive_time"));
+	        		booking.put("bookedfor_name", rs.getString("booked_for_name"));
 	        		booking.put("booked_by", rs.getString("booked_by_name"));
-	        		booking.put("whenbooked", new Date(rs.getTimestamp("booked_made_time").getTime()));
+	        		booking.put("when_booked", new Date(rs.getTimestamp("booked_made_time").getTime()));
 				}
 				conn.commit();
 			} catch (SQLException sqle) {
