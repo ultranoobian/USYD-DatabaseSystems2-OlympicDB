@@ -373,11 +373,11 @@ public class DatabaseBackend {
         		journeys.add(newJourney);
         	}
         	
-        	
+        	reallyClose(conn);
         } catch (Exception e) {
 			throw new OlympicsDBException("Error retrieving journeys", e);
         }
-
+        
         return journeys;
     }
 
@@ -407,6 +407,7 @@ public class DatabaseBackend {
         	{
         		conn.close();
         	}
+        	reallyClose(conn);
     		}catch(Exception e){
             	e.printStackTrace();
             	
@@ -449,6 +450,7 @@ public class DatabaseBackend {
         	{
         		conn.close();
         	}
+        	reallyClose(conn);
     		}catch(Exception e){
             	e.printStackTrace();
             	
@@ -458,49 +460,40 @@ public class DatabaseBackend {
         return details;
     }
 
-    public HashMap<String,Object> makeBooking(String byStaff, String forMember, String vehicle, Date departs) throws OlympicsDBException {
-    	HashMap<String,Object> booking = null;
-    	try{
-    	Connection conn= getConnection();
-		Statement stmt=null;
-    	
-    	String query="SELECT vehicle,depart_time,from_place,to_place,journey_id"
-    			+ " FROM Journey natural join Booking "
-    			+" WHERE vehicle_code = "+vehicle +" and departs_time= "+departs;
-    		stmt = conn.createStatement();
-    		
-    		ResultSet rset = stmt.executeQuery(query);
-        	booking = new HashMap<String,Object>();
-            booking.put("vehicle", vehicle);
-        	booking.put("start_day", rset.getDate("depart_time"));
-        	booking.put("start_time",rset.getTime("depart_time"));
-        	booking.put("to", rset.getString("to_place"));
-        	booking.put("from", "from_place");
-        	booking.put("booked_by", byStaff);
-        	booking.put("whenbooked", new Date());
-        	
-        	
-    		query="INSERT INTO booking VALUES ( '"+  forMember+"',' "     +    byStaff +" ',' "    +        departs+" ',"+rset.getInt("journey_id")+")";
-    		stmt.executeUpdate(query);
-    		
-        // FIXME: DUMMY FUNCTION NEEDS TO BE PROPERLY IMPLEMENTED
+	public HashMap<String, Object> makeBooking(String byStaff, String forMember, String vehicle, Date departs)
+			throws OlympicsDBException {
+		HashMap<String, Object> booking = null;
 
-    	/*
-    	booking = new HashMap<String,Object>();
-        booking.put("vehicle", "TR870R");
-    	booking.put("start_day", "21/12/2020");
-    	booking.put("start_time", new Date());
-    	booking.put("to", "SIT");
-    	booking.put("from", "Wentworth");
-    	booking.put("booked_by", "Mike");
-    	booking.put("whenbooked", new Date());
-    	*/
-    	}catch(Exception e){
-    		e.printStackTrace();
-    	}
-    	return booking;
-    	
-    }
+		String sql = "SELECT * FROM makeBooking(?,?,?,?)";
+		try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql);) {
+			ps.setString(1, byStaff);
+			ps.setString(2, forMember);
+			ps.setString(3, vehicle);
+			ps.setTimestamp(4, new java.sql.Timestamp(departs.getTime()));
+			conn.setAutoCommit(false);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					booking = new HashMap<String, Object>();
+					
+					booking.put("vehicle", vehicle);
+	        		booking.put("start_day", rs.getDate("depart_time"));
+	        		booking.put("start_time",rs.getTime("depart_time"));
+	        		booking.put("to", rs.getString("toPlace"));
+	        		booking.put("from", rs.getString("fromPlace"));
+	        		booking.put("booked_by", rs.getString("booked_by_name"));
+	        		booking.put("whenbooked", new Date(rs.getTimestamp("booked_made_time").getTime()));
+				}
+				conn.commit();
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+				conn.rollback();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return booking;
+
+	}
 
     public HashMap<String,Object> getBookingDetails(String memberID, Integer journeyId) throws OlympicsDBException {
     	HashMap<String,Object> booking = null;
@@ -568,6 +561,7 @@ public class DatabaseBackend {
     	{
     		conn.close();
     	}
+    		reallyClose(conn);
 		}catch(Exception e){
         	e.printStackTrace();
         	
